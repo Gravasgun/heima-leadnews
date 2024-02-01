@@ -6,7 +6,7 @@ import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
 import com.heima.model.user.dtos.LoginDto;
 import com.heima.user.mapper.ApUserMapper;
-import com.heima.user.model.user.beans.ApUser;
+import com.heima.model.user.beans.ApUser;
 import com.heima.user.service.ApUserService;
 import com.heima.utils.AppJwtUtil;
 import lombok.extern.slf4j.Slf4j;
