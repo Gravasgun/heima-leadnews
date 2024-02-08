@@ -19,6 +19,11 @@ public class MinIOTest {
     @Autowired
     private FileStorageService fileStorageService;
 
+    /**
+     * 上传html文件到MinIO
+     *
+     * @throws FileNotFoundException
+     */
     @Test
     public void testUploadFile() throws FileNotFoundException {
         FileInputStream fileInputStream = new FileInputStream("D:\\01-basic.html");
