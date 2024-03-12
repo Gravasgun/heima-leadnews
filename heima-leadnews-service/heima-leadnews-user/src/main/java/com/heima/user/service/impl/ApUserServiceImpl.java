@@ -40,7 +40,7 @@ public class ApUserServiceImpl extends ServiceImpl<ApUserMapper, ApUser> impleme
             LambdaQueryWrapper<ApUser> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(ApUser::getPhone, loginDto.getPhone());
             ApUser dbUser = userMapper.selectOne(queryWrapper);
-            if (dbUser==null){
+            if (dbUser == null) {
                 return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "用户不存在");
             }
             //1.2比对密码(前端传过来的密码+数据库中的salt与数据库的密码比对)
