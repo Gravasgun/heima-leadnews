@@ -44,6 +44,16 @@ public class AuthorizeFilter implements Ordered, GlobalFilter {
                 response.setStatusCode(HttpStatus.UNAUTHORIZED);
                 return response.setComplete();
             }
+            //图片上传功能所需
+            //获取用户信息
+            Object userId = claimsBody.get("id");
+            //存入header(在这段代码中，request.mutate() 方法用于创建原始请求的可变副本。这个副本可以通过一系列的修改操作来改变原始请求的状态，例如添加、删除、更新请求头、查询参数等操作)
+            //在本段代码中，mutate() 方法用于创建一个可变的副本，然后通过链式调用 headers() 方法来修改请求头部信息，最后通过 build() 方法构建出修改后的新的 ServerHttpRequest 对象)
+            ServerHttpRequest serverHttpRequest = request.mutate().headers(httpHeaders -> {
+                httpHeaders.add("userId", userId + "");
+            }).build();
+            //重置请求
+            exchange.mutate().request(serverHttpRequest);
         } catch (Exception e) {
             e.printStackTrace();
         }

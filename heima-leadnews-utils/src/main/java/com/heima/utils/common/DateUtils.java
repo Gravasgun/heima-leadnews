@@ -1,4 +1,4 @@
-package com.heima.utils;
+package com.heima.utils.common;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

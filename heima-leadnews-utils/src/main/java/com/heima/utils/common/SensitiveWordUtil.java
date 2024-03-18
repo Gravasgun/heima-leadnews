@@ -1,4 +1,4 @@
-package com.heima.utils;
+package com.heima.utils.common;
 
 
 import java.util.*;

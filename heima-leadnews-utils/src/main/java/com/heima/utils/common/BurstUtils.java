@@ -1,4 +1,4 @@
-package com.heima.utils;
+package com.heima.utils.common;
 
 /**
  * 分片桶字段算法

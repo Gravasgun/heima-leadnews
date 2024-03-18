@@ -1,4 +1,4 @@
-package com.heima.utils;
+package com.heima.utils.common;
 
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;

@@ -8,7 +8,7 @@ import com.heima.model.user.dtos.LoginDto;
 import com.heima.user.mapper.ApUserMapper;
 import com.heima.model.user.beans.ApUser;
 import com.heima.user.service.ApUserService;
-import com.heima.utils.AppJwtUtil;
+import com.heima.utils.common.AppJwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.heima.utils;
+package com.heima.utils.common;
 
 /**
  * Twitter_Snowflake<br>
