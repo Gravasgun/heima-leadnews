@@ -23,22 +23,18 @@ public class AuthorizeFilter implements Ordered, GlobalFilter {
         //1.获取request和response对象
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
-
         //2.判断是否是登录
         if(request.getURI().getPath().contains("/login")){
             //放行
             return chain.filter(exchange);
         }
-
         //3.获取token
         String token = request.getHeaders().getFirst("token");
-
         //4.判断token是否存在
         if(StringUtils.isBlank(token)){
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             return response.setComplete();
         }
-
         //5.判断token是否有效
         try {
             Claims claimsBody = AppJwtUtil.getClaimsBody(token);
@@ -48,11 +44,9 @@ public class AuthorizeFilter implements Ordered, GlobalFilter {
                 response.setStatusCode(HttpStatus.UNAUTHORIZED);
                 return response.setComplete();
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         //6.放行
         return chain.filter(exchange);
     }
