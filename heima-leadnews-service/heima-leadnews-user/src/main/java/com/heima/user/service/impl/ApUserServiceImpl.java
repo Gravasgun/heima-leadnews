@@ -53,6 +53,7 @@ public class ApUserServiceImpl extends ServiceImpl<ApUserMapper, ApUser> impleme
             }
             //1.4密码比对成功 返回jwt和user
             String token = AppJwtUtil.getToken(dbUser.getId().longValue());
+            log.info("token:{}", token);
             dbUser.setPassword("");
             dbUser.setSalt("");
             Map<String, Object> map = new HashMap<>();

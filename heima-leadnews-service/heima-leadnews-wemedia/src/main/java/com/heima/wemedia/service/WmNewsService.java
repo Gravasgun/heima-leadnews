@@ -11,13 +11,15 @@ public interface WmNewsService extends IService<WmNews> {
 
     /**
      * 查询文章列表
+     *
      * @param dto
      * @return
      */
-    public ResponseResult findAll(WmNewsPageReqDto dto);
+    ResponseResult findAll(WmNewsPageReqDto dto);
 
     /**
      * 发布文章
+     *
      * @param dto
      * @return
      */

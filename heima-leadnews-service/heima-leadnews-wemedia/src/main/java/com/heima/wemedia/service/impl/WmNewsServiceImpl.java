@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.gson.JsonObject;
 import com.heima.common.constans.WemediaConstants;
 import com.heima.common.exception.CustomException;
 import com.heima.model.common.dtos.PageResponseResult;
@@ -55,8 +56,17 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
      */
     @Override
     public ResponseResult findAll(WmNewsPageReqDto dto) {
+        JSON.toJSONString(dto);
         //1.检查参数
+        if (dto == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
         dto.checkParam();
+        //获取当前登录人的信息
+        WmUser user = WmThreadLocalUtil.getUser();
+        if (user == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
+        }
         //2.分页查询
         IPage<WmNews> page = new Page<>(dto.getPage(), dto.getSize());
         LambdaQueryWrapper<WmNews> queryWrapper = new LambdaQueryWrapper<>();
@@ -77,13 +87,13 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
             queryWrapper.like(WmNews::getTitle, dto.getKeyword());
         }
         //查询当前登陆人的文章
-        queryWrapper.eq(WmNews::getUserId, WmThreadLocalUtil.getUser().getId());
+        queryWrapper.eq(WmNews::getUserId, user.getId());
         //按照发布时间倒叙查询
         queryWrapper.orderByDesc(WmNews::getPublishTime);
         page = newsMapper.selectPage(page, queryWrapper);
         //3.返回结果
         ResponseResult responseResult = new PageResponseResult(dto.getPage(), dto.getSize(), (int) page.getTotal());
-        responseResult.setData(page);
+        responseResult.setData(page.getRecords());
         return responseResult;
     }
 
