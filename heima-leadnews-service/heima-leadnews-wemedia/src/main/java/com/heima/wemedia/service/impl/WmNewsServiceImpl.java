@@ -128,28 +128,63 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
         }
         //3.不是草稿，保存文章内容图片与素材的关系
         //获取文章内容的图片信息
-        List<String> pictureUrls = extractUrlInfo(dto.getContent());
-        saveRelativeInfoForContent(pictureUrls, news.getId());
+        List<String> pictureUrlList = getPictureUrlInfo(dto.getContent());
+        saveRelativeInfo(pictureUrlList, news.getId(), WemediaConstants.WM_CONTENT_REFERENCE);
         //4.不是草稿，保存文章封面图片与素材的关系
-        return null;
+        saveRelativeInfoForCover(dto, news, pictureUrlList);
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
 
     /**
-     * 处理文章内容中的图片与素材的关系
+     * 功能一：如果当前封面类型为自动，则设置封面类型的数据
+     * 匹配规则：
+     * 1.如果内容图片大于等于1，小于3，单图，type=1
+     * 2.如果内容图片大于等于3，多图，type=3
+     * 3.如果内容图片为0，无图，type=0
+     * <p>
+     * 功能二：保存封面图片与素材的关系
      *
-     * @param pictureUrls
-     * @param newsId
+     * @param dto
+     * @param news
+     * @param pictureUrlList
      */
-    private void saveRelativeInfoForContent(List<String> pictureUrls, Integer newsId) {
-        saveRelativeInfo(pictureUrls, newsId, WemediaConstants.WM_CONTENT_REFERENCE);
+    private void saveRelativeInfoForCover(WmNewsDto dto, WmNews news, List<String> pictureUrlList) {
+        List<String> imageList = dto.getImages();
+        if (dto.getType().equals(WemediaConstants.WM_NEWS_TYPE_AUTO)) {
+            //无图
+            if (pictureUrlList == null || pictureUrlList.size() == 0) {
+                news.setType(WemediaConstants.WM_NEWS_NONE_IMAGE);
+            }
+            //单图
+            if (pictureUrlList != null && pictureUrlList.size() >= 1 && pictureUrlList.size() < 3) {
+                news.setType(WemediaConstants.WM_NEWS_SINGLE_IMAGE);
+                imageList = pictureUrlList.stream().limit(1).collect(Collectors.toList());
+            }
+            //多图
+            if (pictureUrlList != null && pictureUrlList.size() >= 3) {
+                news.setType(WemediaConstants.WM_NEWS_MANY_IMAGE);
+                imageList = pictureUrlList.stream().limit(3).collect(Collectors.toList());
+            }
+        }
+        //修改文章
+        if (imageList != null && imageList.size() > 0) {
+            String image = StringUtils.join(imageList, ",");
+            news.setImages(image);
+        }
+        updateById(news);
+        //保存封面图片与素材的关系
+        if (imageList != null && imageList.size() > 0) {
+            saveRelativeInfo(imageList, news.getId(), WemediaConstants.WM_COVER_REFERENCE);
+        }
     }
 
+
     /**
-     * 保存文章图片与素材关系到数据库中
+     * 保存文章图片(内容图片或封面图片)与素材关系到数据库中
      *
      * @param pictureUrlList
      * @param newsId
-     * @param type
+     * @param type 0：内容图片引用 1：封面图片引用
      */
     private void saveRelativeInfo(List<String> pictureUrlList, Integer newsId, Short type) {
         if (pictureUrlList != null && !pictureUrlList.isEmpty()) {
@@ -163,8 +198,8 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
             if (materialList.size() != pictureUrlList.size()) {
                 throw new CustomException(AppHttpCodeEnum.MATERIAL_REFERENCE_FAIL);
             }
-            List<Integer> idList = materialList.stream().map(WmMaterial::getId).collect(Collectors.toList());
-            //List<Integer> ids = materials.stream().mapToInt(WmMaterial::getId).boxed().collect(Collectors.toList());
+            //List<Integer> idList = materialList.stream().map(WmMaterial::getId).collect(Collectors.toList());
+            List<Integer> idList = materialList.stream().mapToInt(WmMaterial::getId).boxed().collect(Collectors.toList());
             //批量保存
             wmNewsMaterialMapper.saveRelations(idList, newsId, type);
         }
@@ -177,7 +212,7 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
      * @param content
      * @return
      */
-    private List<String> extractUrlInfo(String content) {
+    private List<String> getPictureUrlInfo(String content) {
         List<String> imageList = new ArrayList<>();
         List<Map> maps = JSON.parseArray(content, Map.class);
         for (Map map : maps) {
