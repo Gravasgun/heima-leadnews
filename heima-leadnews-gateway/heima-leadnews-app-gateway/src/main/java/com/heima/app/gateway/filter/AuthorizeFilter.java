@@ -29,6 +29,7 @@ public class AuthorizeFilter implements Ordered, GlobalFilter {
         }
         //不是登录请求 获取token
         String token = request.getHeaders().getFirst("token");
+        log.info("token:{}", token);
         //如果token为空 设置401状态码
         if (StringUtils.isBlank(token)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
