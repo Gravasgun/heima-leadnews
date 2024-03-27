@@ -1,4 +1,4 @@
-package com.heima.common.aliyun.util;
+package com.heima.common.aliyun;
 
 import com.alibaba.fastjson.JSON;
 import com.aliyun.green20220302.Client;
@@ -18,7 +18,7 @@ import java.util.*;
 @Setter
 @Component
 @ConfigurationProperties(prefix = "aliyun")
-public class ImageScanUtil {
+public class OssImageScanUtil {
 
     private String accessKeyId;
     private String secret;

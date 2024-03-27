@@ -1,4 +1,4 @@
-package com.heima.common.aliyun.util;
+package com.heima.common.aliyun;
 
 import com.alibaba.fastjson.JSON;
 
