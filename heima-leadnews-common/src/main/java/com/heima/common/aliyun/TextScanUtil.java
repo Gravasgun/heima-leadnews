@@ -48,9 +48,9 @@ public class TextScanUtil {
         serviceParameters.put("content", content);
 
         //检测结果构造
-        Map<String,String> resultMap = new HashMap<>();
+        Map<String, String> resultMap = new HashMap<>();
         if (serviceParameters.get("content") == null || serviceParameters.getString("content").trim().length() == 0) {
-            resultMap.put("suggestion","检测内容为空");
+            resultMap.put("suggestion", "检测内容为空");
             System.out.println("text moderation content is empty");
             return resultMap;
         }
@@ -82,15 +82,16 @@ public class TextScanUtil {
                 //请求成功
                 if (response.getStatusCode() == 200) {
                     TextModerationResponseBody result = response.getBody();
-                    System.out.println("result = "+JSON.toJSONString(result));
+                    System.out.println("文本检测开始");
+                    System.out.println("result = " + JSON.toJSONString(result));
                     Integer code = result.getCode();
                     if (code != null && code == 200) {
                         TextModerationResponseBody.TextModerationResponseBodyData data = result.getData();
                         if (data.getLabels().isEmpty() && data.getReason().isEmpty()) {
                             resultMap.put("suggestion", "pass");
-                        }else {
-                            resultMap.put("suggestion","block");
-                            resultMap.put("labels",data.getLabels());
+                        } else {
+                            resultMap.put("suggestion", "block");
+                            resultMap.put("labels", data.getLabels());
                             resultMap.put("reason", data.getReason());
                         }
 //                        System.out.println("labels = [" + data.getLabels() + "]");
@@ -106,6 +107,7 @@ public class TextScanUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println(JSONObject.toJSONString(resultMap));
         return resultMap;
     }
 

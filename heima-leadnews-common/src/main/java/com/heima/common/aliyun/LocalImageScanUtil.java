@@ -1,6 +1,7 @@
 package com.heima.common.aliyun;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.aliyun.green20220302.Client;
 import com.aliyun.green20220302.models.*;
 import com.aliyun.oss.OSS;
@@ -14,6 +15,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -152,13 +154,15 @@ public class LocalImageScanUtil {
             // 打印检测结果。
             if (response != null) {
                 if (response.getStatusCode() == 200) {
+                    System.out.println("图片检测开始");
                     ImageModerationResponseBody body = response.getBody();
-                    System.out.println("requestId=" + body.getRequestId());
-                    System.out.println("code=" + body.getCode());
-                    System.out.println("msg=" + body.getMsg());
+                    JSONObject.toJSONString(body);
+//                    System.out.println("requestId=" + body.getRequestId());
+//                    System.out.println("code=" + body.getCode());
+//                    System.out.println("msg=" + body.getMsg());
                     if (body.getCode() == 200) {
                         ImageModerationResponseBody.ImageModerationResponseBodyData data = body.getData();
-                        System.out.println("dataId=" + data.getDataId());
+//                        System.out.println("dataId=" + data.getDataId());
                         List<ImageModerationResponseBody.ImageModerationResponseBodyDataResult> results = data.getResult();
                         if (results.get(0).getLabel().equals("nonLabel") && results.get(0).getConfidence() == null) {
                             map.put("suggestion", "pass");
@@ -166,8 +170,7 @@ public class LocalImageScanUtil {
                             map.put("suggestion", "block");
                         }
                         for (ImageModerationResponseBody.ImageModerationResponseBodyDataResult result : results) {
-                            System.out.println("label=" + result.getLabel());
-                            System.out.println("confidence=" + result.getConfidence());
+                            System.out.println("result = " + JSONObject.toJSONString(result));
                         }
                     } else {
                         System.out.println("image moderation not success. code:" + body.getCode());
@@ -179,6 +182,7 @@ public class LocalImageScanUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println(JSONObject.toJSONString(map));
         return map;
     }
 }
