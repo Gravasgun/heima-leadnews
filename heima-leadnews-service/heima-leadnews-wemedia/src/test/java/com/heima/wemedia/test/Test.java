@@ -53,6 +53,6 @@ public class Test {
 
     @org.junit.Test
     public void autoScanNews() {
-        wmNewsAutoScanService.autoScanNews(6233);
+        wmNewsAutoScanService.autoScanNews(6234);
     }
 }

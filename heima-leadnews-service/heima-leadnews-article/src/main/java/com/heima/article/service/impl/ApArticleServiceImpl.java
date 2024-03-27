@@ -87,6 +87,12 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
      */
     @Override
     public ResponseResult saveArticle(ArticleDto dto) {
+//        //服务降级处理测试
+//        try {
+//            Thread.sleep(3000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
         JSONObject.toJSONString(dto);
         //1.检查参数
         if(dto == null){

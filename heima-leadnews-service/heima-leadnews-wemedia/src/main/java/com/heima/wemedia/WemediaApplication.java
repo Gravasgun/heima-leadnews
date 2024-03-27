@@ -16,7 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @MapperScan("com.heima.wemedia.mapper")
 @EnableFeignClients(basePackages = "com.heima.apis")
-@ComponentScan(basePackages = {"com.heima.wemedia.service","com.heima.common.aliyun"})
+@ComponentScan(basePackages = {"com.heima.wemedia","com.heima.common.aliyun"})
 public class WemediaApplication {
 
     public static void main(String[] args) {
