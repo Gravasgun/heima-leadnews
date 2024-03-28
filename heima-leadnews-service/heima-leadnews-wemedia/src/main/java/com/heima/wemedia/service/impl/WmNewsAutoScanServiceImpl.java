@@ -5,6 +5,8 @@ import com.heima.apis.article.IArticleClient;
 import com.heima.common.aliyun.LocalImageScanUtil;
 import com.heima.common.aliyun.TextScanUtil;
 import com.heima.common.exception.CustomException;
+import com.heima.common.tess4j.Tess4jClient;
+import com.heima.file.service.FileStorageService;
 import com.heima.model.article.dtos.ArticleDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
@@ -23,6 +25,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.util.*;
 
 @Service
@@ -47,8 +52,13 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
     @Autowired
     private WmUserMapper wmUserMapper;
 
+    @Autowired
+    private FileStorageService fileStorageService;
+
+    @Autowired
+    private Tess4jClient tess4jClient;
     /**
-     * 自媒体文章审核
+     * 自媒体文章自动审核
      *
      * @param articleId 文章id
      */
@@ -146,8 +156,28 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
             return result;
         }
         try {
-            for (String image : images) {
-                Map imageScanMap = localImageScanUtil.localImageScan(image);
+            for (String imagePath : images) {
+                //1.图片文字审核
+                //从minio下载图片
+                byte[] bytes = fileStorageService.downLoadFile(imagePath);
+                //图片文字识别
+                System.out.println("图片文字识别开始------------------");
+                ByteArrayInputStream in=new ByteArrayInputStream(bytes);
+                BufferedImage bufferedImage = ImageIO.read(in);
+                String imageScanResult = tess4jClient.doOCR(bufferedImage);
+                System.out.println("图片文字识别结束------------------");
+                //调用阿里云文字审核api
+                Map map = textScanUtil.greeTextScan(imageScanResult);
+                //图片文字审核失败
+                if (map != null && map.get("suggestion").equals("block")) {
+                    result = false;
+                    news.setStatus((short) 2);
+                    news.setReason("当前文章的图片中的文本存在违规内容");
+                    wmNewsMapper.updateById(news);
+                    break;
+                }
+                //2.图片审核
+                Map imageScanMap = localImageScanUtil.localImageScan(imagePath);
                 if (imageScanMap.get("suggestion").equals("block")) {
                     result = false;
                     news.setStatus((short) 2);

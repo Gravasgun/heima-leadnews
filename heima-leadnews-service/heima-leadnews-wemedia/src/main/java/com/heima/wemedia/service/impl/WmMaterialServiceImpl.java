@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.heima.common.exception.CustomException;
 import com.heima.file.service.FileStorageService;
 import com.heima.model.common.dtos.PageResponseResult;
 import com.heima.model.common.dtos.ResponseResult;
@@ -88,6 +89,9 @@ public class WmMaterialServiceImpl extends ServiceImpl<WmMaterialMapper, WmMater
         //是否收藏
         if (dto.getIsCollection() != null && dto.getIsCollection() == 1) {
             lambdaQueryWrapper.eq(WmMaterial::getIsCollection, dto.getIsCollection());
+        }
+        if (WmThreadLocalUtil.getUser() == null) {
+            throw new CustomException(AppHttpCodeEnum.NEED_LOGIN);
         }
         //按照用户查询
         lambdaQueryWrapper.eq(WmMaterial::getUserId, WmThreadLocalUtil.getUser().getId());
