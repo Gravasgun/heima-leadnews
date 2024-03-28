@@ -57,14 +57,15 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
 
     @Autowired
     private Tess4jClient tess4jClient;
+
     /**
      * 自媒体文章自动审核
      *
-     * @param articleId 文章id
+     * @param newsId 文章id
      */
     @Override
     @Async //表明此方法是一个异步方法
-    public void autoScanNews(Integer articleId) {
+    public void autoScanNews(Integer newsId) {
         //睡0.5秒 不然id有可能为空
         try {
             Thread.sleep(500);
@@ -72,7 +73,7 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
             throw new RuntimeException(e);
         }
         //1.查询自媒体文章
-        WmNews news = wmNewsMapper.selectById(articleId);
+        WmNews news = wmNewsMapper.selectById(newsId);
         if (news == null) {
             throw new CustomException(AppHttpCodeEnum.DATA_NOT_EXIST);
         }
@@ -162,7 +163,7 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
                 byte[] bytes = fileStorageService.downLoadFile(imagePath);
                 //图片文字识别
                 System.out.println("图片文字识别开始------------------");
-                ByteArrayInputStream in=new ByteArrayInputStream(bytes);
+                ByteArrayInputStream in = new ByteArrayInputStream(bytes);
                 BufferedImage bufferedImage = ImageIO.read(in);
                 String imageScanResult = tess4jClient.doOCR(bufferedImage);
                 System.out.println("图片文字识别结束------------------");

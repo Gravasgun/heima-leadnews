@@ -82,7 +82,7 @@ public class TextScanUtil {
                 //请求成功
                 if (response.getStatusCode() == 200) {
                     TextModerationResponseBody result = response.getBody();
-                    System.out.println("文本检测开始");
+                    System.out.println("文本检测开始----------");
                     System.out.println("result = " + JSON.toJSONString(result));
                     Integer code = result.getCode();
                     if (code != null && code == 200) {
@@ -108,6 +108,7 @@ public class TextScanUtil {
             e.printStackTrace();
         }
         System.out.println(JSONObject.toJSONString(resultMap));
+        System.out.println("文本检测结束----------");
         return resultMap;
     }
 

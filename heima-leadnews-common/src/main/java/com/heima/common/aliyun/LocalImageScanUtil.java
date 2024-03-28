@@ -154,7 +154,7 @@ public class LocalImageScanUtil {
             // 打印检测结果。
             if (response != null) {
                 if (response.getStatusCode() == 200) {
-                    System.out.println("图片检测开始");
+                    System.out.println("图片检测开始----------");
                     ImageModerationResponseBody body = response.getBody();
                     JSONObject.toJSONString(body);
 //                    System.out.println("requestId=" + body.getRequestId());
@@ -183,6 +183,7 @@ public class LocalImageScanUtil {
             e.printStackTrace();
         }
         System.out.println(JSONObject.toJSONString(map));
+        System.out.println("图片检测结束----------");
         return map;
     }
 }

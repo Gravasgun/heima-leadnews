@@ -16,6 +16,6 @@ public class IArticleClientFallback implements IArticleClient {
      */
     @Override
     public ResponseResult saveArticle(ArticleDto dto) {
-        return ResponseResult.errorResult(AppHttpCodeEnum.SERVER_ERROR,"获取数据失败");
+        return ResponseResult.errorResult(AppHttpCodeEnum.SERVER_ERROR,"保存article接口超时");
     }
 }
