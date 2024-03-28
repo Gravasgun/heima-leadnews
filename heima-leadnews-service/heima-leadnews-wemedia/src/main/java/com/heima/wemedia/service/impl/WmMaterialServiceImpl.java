@@ -83,7 +83,7 @@ public class WmMaterialServiceImpl extends ServiceImpl<WmMaterialMapper, WmMater
         //1.参数校验
         dto.checkParam();
         //2.分页查询
-        IPage<WmMaterial> page = new Page<>(dto.getPage(), dto.getSize());
+        IPage<WmMaterial> page = new Page<>(dto.getPage(), dto.getSize() * 2);
         LambdaQueryWrapper<WmMaterial> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         //是否收藏
         if (dto.getIsCollection() != null && dto.getIsCollection() == 1) {
@@ -94,7 +94,7 @@ public class WmMaterialServiceImpl extends ServiceImpl<WmMaterialMapper, WmMater
         //按照创建时间倒序查询
         lambdaQueryWrapper.orderByDesc(WmMaterial::getCreatedTime);
         page = materialMapper.selectPage(page, lambdaQueryWrapper);
-        ResponseResult responseResult = new PageResponseResult(dto.getPage(), dto.getSize(), Integer.parseInt(String.valueOf(page.getTotal())));
+        ResponseResult responseResult = new PageResponseResult(dto.getPage(), dto.getSize() * 2, Integer.parseInt(String.valueOf(page.getTotal())));
         responseResult.setData(page.getRecords());
         return responseResult;
     }

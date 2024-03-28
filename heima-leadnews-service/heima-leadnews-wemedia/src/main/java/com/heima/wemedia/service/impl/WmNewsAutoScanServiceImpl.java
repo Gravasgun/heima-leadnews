@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +53,14 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
      * @param articleId 文章id
      */
     @Override
+    @Async //表明此方法是一个异步方法
     public void autoScanNews(Integer articleId) {
+        //睡0.5秒 不然id有可能为空
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         //1.查询自媒体文章
         WmNews news = wmNewsMapper.selectById(articleId);
         if (news == null) {
@@ -173,7 +181,7 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
             if (map != null && map.get("suggestion").equals("block")) {
                 result = false;
                 news.setStatus((short) 2);
-                news.setReason("当前文章中存在违规内容");
+                news.setReason("当前文章的文本存在违规内容");
                 wmNewsMapper.updateById(news);
             }
         } catch (Exception e) {
