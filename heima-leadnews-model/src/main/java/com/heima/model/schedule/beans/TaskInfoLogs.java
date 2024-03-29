@@ -1,20 +1,17 @@
 package com.heima.model.schedule.beans;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 任务类
+ * 任务日志
  */
 @Data
-@TableName("taskinfo")
-public class Taskinfo implements Serializable {
+@TableName("taskinfo_logs")
+public class TaskInfoLogs implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -47,6 +44,18 @@ public class Taskinfo implements Serializable {
      */
     @TableField("task_type")
     private Integer taskType;
+
+    /**
+     * 版本号,用乐观锁
+     */
+    @Version
+    private Integer version;
+
+    /**
+     * 状态 0=int 1=EXECUTED 2=CANCELLED
+     */
+    @TableField("status")
+    private Integer status;
 
 
 }

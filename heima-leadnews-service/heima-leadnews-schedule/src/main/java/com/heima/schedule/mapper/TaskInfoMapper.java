@@ -1,7 +1,7 @@
 package com.heima.schedule.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.heima.model.schedule.beans.Taskinfo;
+import com.heima.model.schedule.beans.TaskInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Mapper
-public interface TaskInfoMapper extends BaseMapper<Taskinfo> {
+public interface TaskInfoMapper extends BaseMapper<TaskInfo> {
 
-    public List<Taskinfo> queryFutureTime(@Param("taskType") int type, @Param("priority") int priority, @Param("future") Date future);
+    public List<TaskInfo> queryFutureTime(@Param("taskType") int type, @Param("priority") int priority, @Param("future") Date future);
 }
