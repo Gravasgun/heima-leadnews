@@ -11,6 +11,14 @@
 
     <artifactId>heima-leadnews-schedule</artifactId>
 
+    <dependencies>
+        <!--redisson-->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.13.6</version>
+        </dependency>
+    </dependencies>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>

@@ -10,3 +10,7 @@ spring:
       config:
         server-addr: 192.168.200.130:8848
         file-extension: yml
+
+redisson:
+  password: leadnews
+  address: redis://192.168.200.130:6379

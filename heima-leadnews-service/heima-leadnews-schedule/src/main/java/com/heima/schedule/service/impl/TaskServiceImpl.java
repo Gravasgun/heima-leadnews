@@ -11,6 +11,8 @@ import com.heima.schedule.mapper.TaskInfoMapper;
 import com.heima.schedule.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -33,6 +36,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private CacheService cacheService;
+    @Autowired
+    private RedissonClient redissonClient;
 
     /**
      * 添加延迟任务
@@ -93,12 +98,12 @@ public class TaskServiceImpl implements TaskService {
      * @param task
      */
     private void addTaskToRedis(Task task) {
-        //如果任务的执行时间小于等于当前时间，添加到list中
         String key = task.getTaskType() + "_" + task.getPriority();
         //获取预设时间
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, 5);
         long futureTime = calendar.getTimeInMillis();
+        //如果任务的执行时间小于等于当前时间，添加到list中
         if (task.getExecuteTime() <= System.currentTimeMillis()) {
             cacheService.lLeftPush(ScheduleConstants.NOW + key, JSONObject.toJSONString(task));
         } else if (task.getExecuteTime() <= futureTime) {
@@ -118,7 +123,7 @@ public class TaskServiceImpl implements TaskService {
         boolean flag = false;
         //1.删除任务 更新任务日志
         Task task = updateDataBase(taskId, ScheduleConstants.CANCELLED);
-        //2.删除redis中的数据
+        //2.删除redis中的缓存
         if (task != null) {
             removeTaskFromRedis(task);
             flag = true;
@@ -127,7 +132,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * //1.删除任务 更新任务日志
+     * 1.删除任务 更新任务日志
      *
      * @param taskId
      * @param status
@@ -153,7 +158,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * 2.删除redis中的Task数据
+     * 2.删除redis中的Task缓存
      *
      * @param task
      */
@@ -167,7 +172,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * 按照任务类型和优先级拉取任务
+     * 按照任务类型和优先级拉取任务(消费list中的任务)
      *
      * @param type
      * @param priority
@@ -197,19 +202,27 @@ public class TaskServiceImpl implements TaskService {
      */
     @Scheduled(cron = "0 */1 * * * ?")
     public void refresh() {
-        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        System.out.println(simpleDateFormat.format(new Date()) + "执行了定时任务");
-        //获取zset中的所有未执行任务的key
-        Set<String> futureKeys = cacheService.scan(ScheduleConstants.FUTURE + "*");
-        for (String futureKey : futureKeys) {
-            //futureKeys中的每一个key都是一个set集合，把这个set集合中的任务按照score，把执行时间小于当前时间的任务取出来
-            Set<String> futureTask = cacheService.zRangeByScore(futureKey, 0, System.currentTimeMillis());
-            if (!futureTask.isEmpty()) {
-                String topicKey = ScheduleConstants.NOW + futureKey.split(ScheduleConstants.FUTURE)[1];
-                //使用redis管道技术将未来任务从zset中删除、添加进list中
-                cacheService.refreshWithPipeline(futureKey, topicKey, futureTask);
-                System.out.println("成功的将" + futureKey + "下的当前需要执行的任务数据刷新到" + topicKey + "下");
+        RLock lock = redissonClient.getLock("FUTURE_TASK_SYNC");
+        try {
+            boolean flag = lock.tryLock(1, 30, TimeUnit.SECONDS);
+            if (flag) {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                System.out.println(simpleDateFormat.format(new Date()) + "执行了定时任务");
+                //获取zset中的所有未执行任务的key
+                Set<String> futureKeys = cacheService.scan(ScheduleConstants.FUTURE + "*");
+                for (String futureKey : futureKeys) {
+                    //futureKeys中的每一个key都是一个set集合，把这个set集合中的任务按照score，把执行时间小于当前时间的任务取出来
+                    Set<String> futureTask = cacheService.zRangeByScore(futureKey, 0, System.currentTimeMillis());
+                    if (!futureTask.isEmpty()) {
+                        String topicKey = ScheduleConstants.NOW + futureKey.split(ScheduleConstants.FUTURE)[1];
+                        //使用redis管道技术将未来任务从zset中删除、添加进list中
+                        cacheService.refreshWithPipeline(futureKey, topicKey, futureTask);
+                        System.out.println("成功的将" + futureKey + "下的当前需要执行的任务数据刷新到" + topicKey + "下");
+                    }
+                }
             }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }
