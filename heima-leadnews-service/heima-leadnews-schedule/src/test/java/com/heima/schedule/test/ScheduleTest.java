@@ -32,7 +32,12 @@ public class ScheduleTest {
     }
 
     @Test
-    public void testCancelTask(){
+    public void testCancelTask() {
         taskService.cancelTask(1774445234708598786L);
+    }
+
+    @Test
+    public void testPollTask() {
+        taskService.pollTask(100, 50);
     }
 }
