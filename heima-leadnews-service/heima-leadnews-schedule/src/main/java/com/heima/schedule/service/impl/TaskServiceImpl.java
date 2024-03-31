@@ -2,6 +2,7 @@ package com.heima.schedule.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.heima.common.constans.ScheduleConstants;
+import com.heima.common.exception.CustomException;
 import com.heima.common.redis.CacheService;
 import com.heima.model.schedule.beans.TaskInfo;
 import com.heima.model.schedule.beans.TaskInfoLogs;
@@ -45,6 +46,65 @@ public class TaskServiceImpl implements TaskService {
             addTaskToRedis(task);
         }
         return task.getTaskId();
+    }
+
+    /**
+     * 取消任务
+     *
+     * @param taskId
+     * @return
+     */
+    @Override
+    public boolean cancelTask(Long taskId) {
+        boolean flag = false;
+        //1.删除任务 更新任务日志
+        Task task = updateDataBase(taskId, ScheduleConstants.CANCELLED);
+        //2.删除redis中的数据
+        if (task != null) {
+            removeTaskFromRedis(task);
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 删除redis中的Task数据
+     *
+     * @param task
+     */
+    private void removeTaskFromRedis(Task task) {
+        String key = task.getTaskType() + "_" + task.getPriority();
+        if (task.getExecuteTime() <= System.currentTimeMillis()) {
+            cacheService.lRemove(ScheduleConstants.NOW + key, 0, JSONObject.toJSONString(task));
+        } else {
+            cacheService.zRemove(ScheduleConstants.FUTURE + key, JSONObject.toJSONString(task));
+        }
+    }
+
+    /**
+     * //1.删除任务 更新任务日志
+     *
+     * @param taskId
+     * @param status
+     * @return
+     */
+    private Task updateDataBase(Long taskId, int status) {
+        Task task = null;
+        try {
+            //1.删除任务
+            taskInfoMapper.deleteById(taskId);
+            //2.更新任务日志
+            TaskInfoLogs taskInfoLogs = taskInfoLogsMapper.selectById(taskId);
+            taskInfoLogs.setStatus(status);
+            taskInfoLogsMapper.updateById(taskInfoLogs);
+            task = new Task();
+            BeanUtils.copyProperties(taskInfoLogs, task);
+            task.setExecuteTime(taskInfoLogs.getExecuteTime().getTime());
+        } catch (Exception e) {
+            log.error("task cancel error taskId={}", taskId);
+            throw new RuntimeException("task cancel error taskId={}");
+        }
+        return task;
     }
 
     /**

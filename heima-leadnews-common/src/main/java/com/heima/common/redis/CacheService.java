@@ -720,7 +720,7 @@ public class CacheService extends CachingConfigurerSupport {
     }
     
     /**
-     * 删除集合中值等于value得元素
+     * 删除集合中值等于value的元素
      *
      * @param key
      * @param index

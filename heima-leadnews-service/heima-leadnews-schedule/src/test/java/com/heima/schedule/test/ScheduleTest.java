@@ -24,10 +24,15 @@ public class ScheduleTest {
         task.setPriority(50);
         task.setParameters("新增task测试".getBytes());
         //测试未来任务
-        task.setExecuteTime(new Date().getTime() + 500);
+        //task.setExecuteTime(new Date().getTime() + 500);
         //测试当前任务
         task.setExecuteTime(new Date().getTime());
         long taskId = taskService.addTask(task);
         System.out.println(taskId);
+    }
+
+    @Test
+    public void testCancelTask(){
+        taskService.cancelTask(1774445234708598786L);
     }
 }
