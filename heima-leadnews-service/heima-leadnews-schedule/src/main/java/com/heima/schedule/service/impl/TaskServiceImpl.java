@@ -13,11 +13,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -187,5 +190,26 @@ public class TaskServiceImpl implements TaskService {
             log.error("poll task exception");
         }
         return task;
+    }
+
+    /**
+     * 未来任务定时刷新
+     */
+    @Scheduled(cron = "0 */1 * * * ?")
+    public void refresh() {
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.out.println(simpleDateFormat.format(new Date()) + "执行了定时任务");
+        //获取zset中的所有未执行任务的key
+        Set<String> futureKeys = cacheService.scan(ScheduleConstants.FUTURE + "*");
+        for (String futureKey : futureKeys) {
+            //futureKeys中的每一个key都是一个set集合，把这个set集合中的任务按照score，把执行时间小于当前时间的任务取出来
+            Set<String> futureTask = cacheService.zRangeByScore(futureKey, 0, System.currentTimeMillis());
+            if (!futureTask.isEmpty()) {
+                String topicKey = ScheduleConstants.NOW + futureKey.split(ScheduleConstants.FUTURE)[1];
+                //使用redis管道技术将未来任务从zset中删除、添加进list中
+                cacheService.refreshWithPipeline(futureKey, topicKey, futureTask);
+                System.out.println("成功的将" + futureKey + "下的当前需要执行的任务数据刷新到" + topicKey + "下");
+            }
+        }
     }
 }
