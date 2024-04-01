@@ -17,3 +17,7 @@ minio:
   bucket: leadnews
   endpoint: http://192.168.200.130:9000
   readPath: http://192.168.200.130:9000
+
+redisson:
+  password: leadnews
+  address: redis://192.168.200.130:6379

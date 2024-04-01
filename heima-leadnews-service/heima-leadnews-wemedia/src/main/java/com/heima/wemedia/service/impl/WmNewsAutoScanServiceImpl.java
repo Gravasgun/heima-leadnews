@@ -67,11 +67,11 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
     @Async //表明此方法是一个异步方法
     public void autoScanNews(Integer newsId) {
         //睡0.5秒 不然id有可能为空
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            Thread.sleep(500);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
         //1.查询自媒体文章
         WmNews news = wmNewsMapper.selectById(newsId);
         if (news == null) {
