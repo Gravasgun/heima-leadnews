@@ -14,3 +14,7 @@ spring:
 tess4j:
   data-path: D:\workSpace\tessdata
   language: chi_sim
+
+redisson:
+  password: leadnews
+  address: redis://192.168.200.130:6379
