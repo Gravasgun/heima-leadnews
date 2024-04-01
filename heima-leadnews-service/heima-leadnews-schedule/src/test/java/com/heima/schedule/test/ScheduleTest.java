@@ -36,7 +36,7 @@ public class ScheduleTest {
             task.setPriority(50);
             task.setParameters("新增task测试".getBytes());
             //测试未来任务
-            task.setExecuteTime(new Date().getTime() + 500 * i);
+            task.setExecuteTime(new Date().getTime() + 5000 * i);
             //测试当前任务
             //task.setExecuteTime(new Date().getTime());
             long taskId = taskService.addTask(task);

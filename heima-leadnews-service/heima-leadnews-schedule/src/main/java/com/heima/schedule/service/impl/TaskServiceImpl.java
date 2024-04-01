@@ -1,6 +1,7 @@
 package com.heima.schedule.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.heima.common.constans.ScheduleConstants;
 import com.heima.common.redis.CacheService;
 import com.heima.model.schedule.beans.TaskInfo;
@@ -19,9 +20,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -198,7 +201,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * 未来任务定时刷新
+     * redis中未来任务定时刷新
      */
     @Scheduled(cron = "0 */1 * * * ?")
     public void refresh() {
@@ -207,7 +210,7 @@ public class TaskServiceImpl implements TaskService {
             boolean flag = lock.tryLock(1, 30, TimeUnit.SECONDS);
             if (flag) {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                System.out.println(simpleDateFormat.format(new Date()) + "执行了定时任务");
+                log.info(simpleDateFormat.format(new Date()) + "执行了redis中未来任务定时刷新");
                 //获取zset中的所有未执行任务的key
                 Set<String> futureKeys = cacheService.scan(ScheduleConstants.FUTURE + "*");
                 for (String futureKey : futureKeys) {
@@ -222,7 +225,72 @@ public class TaskServiceImpl implements TaskService {
                 }
             }
         } catch (InterruptedException e) {
+            //出现异常释放锁
+            lock.unlock();
+            throw new RuntimeException(e);
+
+        }
+    }
+
+    /**
+     * 数据库任务同步到redis中
+     */
+    @PostConstruct
+    @Scheduled(cron = "0 */5 * * * ?")
+    public void synTaskToRedis() {
+        RLock lock = redissonClient.getLock("syn_task_lock");
+        try {
+            boolean flag = lock.tryLock(1, 30, TimeUnit.SECONDS);
+            if (flag) {
+                //清除缓存
+                boolean result = clear();
+                if (result) {
+                    //在数据库中查询符合条件(未来5分钟)的、状态为0(初始化)的任务
+                    LambdaQueryWrapper<TaskInfoLogs> queryWrapper = new LambdaQueryWrapper<>();
+                    queryWrapper.eq(TaskInfoLogs::getStatus, ScheduleConstants.INIT);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.MINUTE, 5);
+                    queryWrapper.lt(TaskInfoLogs::getExecuteTime, calendar.getTime());
+                    List<TaskInfoLogs> futureTaskList = taskInfoLogsMapper.selectList(queryWrapper);
+                    if (futureTaskList != null && !futureTaskList.isEmpty()) {
+                        //同步数据
+                        for (TaskInfoLogs futureTaskLog : futureTaskList) {
+                            Task task = new Task();
+                            BeanUtils.copyProperties(futureTaskLog, task);
+                            task.setExecuteTime(futureTaskLog.getExecuteTime().getTime());
+                            addTaskToRedis(task);
+                        }
+                    }
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    log.info(simpleDateFormat.format(new Date()) + "执行了数据库任务同步到redis中");
+                }
+            }
+        } catch (InterruptedException e) {
+            lock.unlock();
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 清空缓存
+     *
+     * @return
+     */
+    public boolean clear() {
+        boolean result = false;
+        try {
+            Set<String> nowKeys = cacheService.scan(ScheduleConstants.NOW + "*");
+            Set<String> futureKeys = cacheService.scan(ScheduleConstants.FUTURE + "*");
+            if (nowKeys != null && !nowKeys.isEmpty()) {
+                cacheService.delete(nowKeys);
+            }
+            if (futureKeys != null && !futureKeys.isEmpty()) {
+                cacheService.delete(futureKeys);
+            }
+            result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }
