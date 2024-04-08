@@ -31,7 +31,6 @@ public class AuthorizeFilter implements Ordered, GlobalFilter {
         //3.获取token
         String token = request.getHeaders().getFirst("token");
         log.info("token:{}", token);
-        System.out.println("wemedia-token:" + token);
         //4.判断token是否存在
         if (StringUtils.isBlank(token)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
