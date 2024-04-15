@@ -22,6 +22,7 @@ public class ArticleListener {
         if (StringUtils.isNotBlank(message)) {
             Map map = JSONObject.parseObject(message, Map.class);
             apArticleConfigService.updateByMap(map);
+            log.info("article端文章配置修改，articleId={}",map.get("articleId"));
         }
     }
 }
