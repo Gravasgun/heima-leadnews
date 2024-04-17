@@ -4,7 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
 import com.heima.model.search.dtos.UserSearchDto;
+import com.heima.model.user.beans.ApUser;
+import com.heima.search.service.ApUserSearchService;
 import com.heima.search.service.ArticleSearchService;
+import com.heima.utils.thread.AppThreadLocalUtil;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.search.SearchRequest;
@@ -34,6 +38,8 @@ import java.util.Map;
 public class ArticleSearchServiceImpl implements ArticleSearchService {
     @Autowired
     private RestHighLevelClient client;
+    @Autowired
+    private ApUserSearchService apUserSearchService;
 
     /**
      * es文章分页检索
@@ -83,6 +89,12 @@ public class ArticleSearchServiceImpl implements ArticleSearchService {
                 }
                 list.add(map);
             }
+            //异步调用 保存搜索记录
+            ApUser user = AppThreadLocalUtil.getUser();
+            if (user != null && user.getId() != null&&dto.getFromIndex()==0) {
+                apUserSearchService.insert(dto.getSearchWords(), user.getId());
+            }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

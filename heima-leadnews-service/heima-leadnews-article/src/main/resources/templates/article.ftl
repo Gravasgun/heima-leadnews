@@ -8,7 +8,8 @@
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
     <title>黑马头条</title>
     <!-- 引入样式文件 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.12.20/lib/index.css">
+<#--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.12.20/lib/index.css">-->
+    <link rel="stylesheet" href="../../../plugins/css/index.css">
     <!-- 页面样式 -->
     <link rel="stylesheet" href="../../../plugins/css/index.css">
 </head>
