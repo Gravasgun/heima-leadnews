@@ -1,6 +1,10 @@
 package com.heima.search.service.impl;
 
+import com.heima.model.common.dtos.ResponseResult;
+import com.heima.model.common.enums.AppHttpCodeEnum;
+import com.heima.model.user.beans.ApUser;
 import com.heima.search.beans.ApUserSearch;
+import com.heima.search.beans.HistorySearchDto;
 import com.heima.search.service.ApUserSearchService;
 import com.heima.utils.thread.AppThreadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +25,23 @@ public class ApUserSearchServiceImpl implements ApUserSearchService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    /**
+     * 查询用户搜索历史记录
+     *
+     * @return
+     */
+    @Override
+    public ResponseResult findUserSearchHistory() {
+        //获取当前用户
+        ApUser user = AppThreadLocalUtil.getUser();
+        if(user == null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
+        }
+        //根据用户查询数据，按照时间倒序
+        List<ApUserSearch> apUserSearches = mongoTemplate.find(Query.query(Criteria.where("userId").is(user.getId())).with(Sort.by(Sort.Direction.DESC, "createdTime")), ApUserSearch.class);
+        return ResponseResult.okResult(apUserSearches);
+    }
 
     /**
      * 保存用户搜索历史记录
@@ -56,5 +77,29 @@ public class ApUserSearchServiceImpl implements ApUserSearchService {
             ApUserSearch lastUserSearch = apUserSearchList.get(apUserSearchList.size() - 1);
             mongoTemplate.findAndReplace(Query.query(Criteria.where("id").is(lastUserSearch.getId())), apUserSearch);
         }
+    }
+
+    /**
+     * 删除历史记录
+     *
+     * @param dto
+     * @return
+     */
+    @Override
+    public ResponseResult delUserSearch(HistorySearchDto dto) {
+        //1.检查参数
+        if(dto.getId() == null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+
+        //2.判断是否登录
+        ApUser user = AppThreadLocalUtil.getUser();
+        if(user == null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
+        }
+
+        //3.删除
+        mongoTemplate.remove(Query.query(Criteria.where("userId").is(user.getId()).and("id").is(dto.getId())),ApUserSearch.class);
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
 }

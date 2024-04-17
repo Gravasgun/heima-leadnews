@@ -1,6 +1,15 @@
 package com.heima.search.service;
 
+import com.heima.model.common.dtos.ResponseResult;
+import com.heima.search.beans.HistorySearchDto;
+
 public interface ApUserSearchService {
+    /**
+     * 查询用户搜索历史记录
+     *
+     * @return
+     */
+    ResponseResult findUserSearchHistory();
 
     /**
      * 保存用户搜索历史记录
@@ -9,4 +18,11 @@ public interface ApUserSearchService {
      * @param userId
      */
     void insert(String keyword, Integer userId);
+
+    /**
+     删除搜索历史
+     @param historySearchDto
+     @return
+     */
+    ResponseResult delUserSearch(HistorySearchDto historySearchDto);
 }
