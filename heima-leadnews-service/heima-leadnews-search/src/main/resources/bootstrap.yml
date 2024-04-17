@@ -1,0 +1,24 @@
+server:
+  port: 51804
+spring:
+  application:
+    name: leadnews-search
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.200.130:8848
+      config:
+        server-addr: 192.168.200.130:8848
+        file-extension: yml
+elasticsearch:
+  host: 192.168.200.130
+  port: 9200
+redisson:
+  password: leadnews
+  address: redis://192.168.200.130:6379
+minio:
+  accessKey: minio
+  secretKey: minio123
+  bucket: leadnews
+  endpoint: http://192.168.200.130:9000
+  readPath: http://192.168.200.130:9000

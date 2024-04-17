@@ -5,6 +5,7 @@ import com.heima.es.mapper.ApArticleMapper;
 import com.heima.es.pojo.SearchArticleVo;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
@@ -41,6 +42,6 @@ public class ApArticleTest {
                     .source(JSONObject.toJSONString(searchArticleVo), XContentType.JSON));
         }
         client.bulk(request, RequestOptions.DEFAULT);
+        request.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);//插入完成后立即强制刷新索引
     }
-
 }
