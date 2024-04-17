@@ -1,0 +1,30 @@
+server:
+  port: 51805
+spring:
+  application:
+    name: leadnews-admin
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/leadnews_admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: Liuhangji0904
+  redis:
+    host: 192.168.200.130
+    password: leadnews
+    port: 6379
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.200.130:8848
+      config:
+        server-addr: 192.168.200.130:8848
+        file-extension: yml
+minio:
+  accessKey: minio
+  secretKey: minio123
+  bucket: leadnews
+  endpoint: http://192.168.200.130:9000
+  readPath: http://192.168.200.130:9000
+redisson:
+  password: leadnews
+  address: redis://192.168.200.130:6379
