@@ -38,4 +38,16 @@ public class ChannelClient implements IChannelClient {
     public ResponseResult findListWithPage(@RequestBody ChannelDto dto) {
         return channelService.findListWithPage(dto);
     }
+
+    /**
+     * 更新频道信息
+     *
+     * @param channel
+     * @return
+     */
+    @Override
+    @PostMapping("/api/v1/channel/update")
+    public ResponseResult updateChannel(@RequestBody AdChannel channel) {
+        return channelService.updateChannel(channel);
+    }
 }

@@ -17,13 +17,18 @@ public class AdChannelController {
     private IChannelClient channelClient;
 
     @PostMapping("/save")
-    public ResponseResult saveChannel(AdChannel adChannel) {
+    public ResponseResult saveChannel(@RequestBody AdChannel adChannel) {
         return channelClient.saveChannel(adChannel);
     }
 
     @PostMapping("/list")
     public ResponseResult findListWithPage(@RequestBody ChannelDto dto) {
         return channelClient.findListWithPage(dto);
+    }
+
+    @PostMapping("/update")
+    public ResponseResult updateChannel(@RequestBody AdChannel channel) {
+        return channelClient.updateChannel(channel);
     }
 }
 

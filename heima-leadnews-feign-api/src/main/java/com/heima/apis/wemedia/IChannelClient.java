@@ -24,4 +24,12 @@ public interface IChannelClient {
      */
     @PostMapping("/api/v1/channel/list")
     ResponseResult findListWithPage(@RequestBody ChannelDto dto);
+
+    /**
+     * 更新频道信息
+     * @param channel
+     * @return
+     */
+    @PostMapping("/api/v1/channel/update")
+    ResponseResult updateChannel(@RequestBody AdChannel channel);
 }
