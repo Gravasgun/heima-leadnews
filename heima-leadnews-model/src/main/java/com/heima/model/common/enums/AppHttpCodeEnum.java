@@ -25,7 +25,8 @@ public enum AppHttpCodeEnum {
     // 数据错误 3000~3500
     NO_OPERATOR_AUTH(3000, "无权限操作"),
     NEED_ADMIND(3001, "需要管理员权限"),
-    CHANNEL_REFERENCED(3001, "频道已被引用，不可禁用"),
+    CHANNEL_REFERENCED(3002, "频道已被引用，不可禁用"),
+    CHANNEL_USED(3003, "频道已被启用，不可删除"),
     // 自媒体文章错误 3501~3600
     MATERIAL_REFERENCE_FAIL(3501, "素材引用失效");
 

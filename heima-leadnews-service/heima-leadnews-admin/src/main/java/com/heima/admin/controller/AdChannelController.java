@@ -5,10 +5,7 @@ import com.heima.model.admin.beans.AdChannel;
 import com.heima.model.admin.dtos.ChannelDto;
 import com.heima.model.common.dtos.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/channel")
@@ -29,6 +26,11 @@ public class AdChannelController {
     @PostMapping("/update")
     public ResponseResult updateChannel(@RequestBody AdChannel channel) {
         return channelClient.updateChannel(channel);
+    }
+
+    @GetMapping("/del/{id}")
+    public ResponseResult deleteChannel(@PathVariable("id") Integer id) {
+        return channelClient.del(id);
     }
 }
 

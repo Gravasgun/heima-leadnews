@@ -6,9 +6,7 @@ import com.heima.model.admin.dtos.ChannelDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.wemedia.service.WmChannelService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ChannelClient implements IChannelClient {
@@ -49,5 +47,17 @@ public class ChannelClient implements IChannelClient {
     @PostMapping("/api/v1/channel/update")
     public ResponseResult updateChannel(@RequestBody AdChannel channel) {
         return channelService.updateChannel(channel);
+    }
+
+    /**
+     * 删除频道
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    @GetMapping("/api/v1/channel/del/{id}")
+    public ResponseResult del(@PathVariable("id") Integer id) {
+        return channelService.del(id);
     }
 }

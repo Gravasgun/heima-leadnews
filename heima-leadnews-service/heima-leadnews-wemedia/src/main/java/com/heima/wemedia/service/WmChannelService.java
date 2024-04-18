@@ -10,9 +10,10 @@ public interface WmChannelService extends IService<WmChannel> {
 
     /**
      * 查询所有频道
+     *
      * @return
      */
-     ResponseResult findAll();
+    ResponseResult findAll();
 
 
     /**
@@ -24,6 +25,7 @@ public interface WmChannelService extends IService<WmChannel> {
 
     /**
      * 分页查询频道列表
+     *
      * @param dto
      * @return
      */
@@ -31,8 +33,17 @@ public interface WmChannelService extends IService<WmChannel> {
 
     /**
      * 更新频道信息
+     *
      * @param channel
      * @return
      */
     ResponseResult updateChannel(AdChannel channel);
+
+    /**
+     * 删除频道
+     *
+     * @param id
+     * @return
+     */
+    ResponseResult del(Integer id);
 }
