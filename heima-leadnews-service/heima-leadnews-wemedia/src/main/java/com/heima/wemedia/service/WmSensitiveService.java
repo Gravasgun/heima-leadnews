@@ -12,4 +12,11 @@ public interface WmSensitiveService extends IService<WmSensitive> {
      * @return
      */
     ResponseResult list(SensitiveDto dto);
+
+    /**
+     * 新增敏感词
+     * @param sensitive
+     * @return
+     */
+    ResponseResult saveSensitive(WmSensitive sensitive);
 }

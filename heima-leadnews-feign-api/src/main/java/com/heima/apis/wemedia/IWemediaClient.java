@@ -4,6 +4,7 @@ import com.heima.model.admin.beans.AdChannel;
 import com.heima.model.admin.dtos.ChannelDto;
 import com.heima.model.admin.dtos.SensitiveDto;
 import com.heima.model.common.dtos.ResponseResult;
+import com.heima.model.wemedia.pojos.WmSensitive;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,5 +56,13 @@ public interface IWemediaClient {
      */
     @PostMapping("/api/v1/sensitive/list")
     ResponseResult findSensitiveListPage(@RequestBody SensitiveDto dto);
+
+    /**
+     * 新增敏感词
+     * @param sensitive
+     * @return
+     */
+    @PostMapping("/api/v1/sensitive/save")
+    ResponseResult saveSensitive(@RequestBody WmSensitive sensitive);
 
 }
