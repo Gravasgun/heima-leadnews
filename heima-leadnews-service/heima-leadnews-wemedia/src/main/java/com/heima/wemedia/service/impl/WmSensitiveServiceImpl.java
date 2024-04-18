@@ -29,6 +29,16 @@ public class WmSensitiveServiceImpl extends ServiceImpl<WmSensitiveMapper, WmSen
     private WmSensitiveMapper sensitiveMapper;
 
     /**
+     * 查询所有敏感词
+     *
+     * @return
+     */
+    @Override
+    public List<WmSensitive> findAllSensitives() {
+        return sensitiveMapper.selectList(null);
+    }
+
+    /**
      * 敏感词分页查询
      *
      * @param dto

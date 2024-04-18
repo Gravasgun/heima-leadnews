@@ -12,11 +12,13 @@ import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
 import com.heima.model.wemedia.pojos.WmChannel;
 import com.heima.model.wemedia.pojos.WmNews;
+import com.heima.model.wemedia.pojos.WmSensitive;
 import com.heima.model.wemedia.pojos.WmUser;
 import com.heima.wemedia.mapper.WmChannelMapper;
 import com.heima.wemedia.mapper.WmNewsMapper;
 import com.heima.wemedia.mapper.WmUserMapper;
 import com.heima.wemedia.service.WmNewsAutoScanService;
+import com.heima.wemedia.service.WmSensitiveService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -29,6 +31,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -57,6 +60,9 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
 
     @Autowired
     private Tess4jClient tess4jClient;
+
+    @Autowired
+    private WmSensitiveService sensitiveService;
 
     /**
      * 自媒体文章自动审核
@@ -156,6 +162,7 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
         if (images != null && images.isEmpty()) {
             return result;
         }
+        //调用阿里云接口
         try {
             for (String imagePath : images) {
                 //1.图片文字审核
@@ -166,6 +173,18 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
                 ByteArrayInputStream in = new ByteArrayInputStream(bytes);
                 BufferedImage bufferedImage = ImageIO.read(in);
                 String imageScanResult = tess4jClient.doOCR(bufferedImage);
+                //敏感词审核
+                List<WmSensitive> sensitiveList = sensitiveService.findAllSensitives();
+                List<String> sensitiveWordList = sensitiveList.stream().map(WmSensitive::getSensitives).collect(Collectors.toList());
+                for (String sensitive : sensitiveWordList) {
+                    if (imageScanResult.contains(sensitive)) {
+                        result = false;
+                        news.setStatus((short) 2);
+                        news.setReason("当前文章的图片存在敏感词");
+                        wmNewsMapper.updateById(news);
+                        return result;
+                    }
+                }
                 System.out.println("图片文字识别结束------------------");
                 //调用阿里云文字审核api
                 Map map = textScanUtil.greeTextScan(imageScanResult);
@@ -206,6 +225,19 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
         if (content != null && (news.getTitle() + "" + content).length() == 0) {
             return result;
         }
+        //敏感词审核
+        List<WmSensitive> sensitiveList = sensitiveService.findAllSensitives();
+        List<String> sensitiveWordList = sensitiveList.stream().map(WmSensitive::getSensitives).collect(Collectors.toList());
+        for (String sensitive : sensitiveWordList) {
+            if (content.contains(sensitive)) {
+                result = false;
+                news.setStatus((short) 2);
+                news.setReason("当前文章的文本存在敏感词");
+                wmNewsMapper.updateById(news);
+                return result;
+            }
+        }
+        //调用阿里云文本审核接口
         try {
             Map<String, String> map = textScanUtil.greeTextScan(content + "-" + news.getTitle());
             //审核失败

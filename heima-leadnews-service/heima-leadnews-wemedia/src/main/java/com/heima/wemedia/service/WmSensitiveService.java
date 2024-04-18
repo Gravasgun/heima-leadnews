@@ -5,7 +5,14 @@ import com.heima.model.admin.dtos.SensitiveDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.wemedia.pojos.WmSensitive;
 
+import java.util.List;
+
 public interface WmSensitiveService extends IService<WmSensitive> {
+    /**
+     * 查询所有敏感词
+     * @return
+     */
+    List<WmSensitive> findAllSensitives();
     /**
      * 敏感词分页查询
      *
