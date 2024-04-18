@@ -1,4 +1,4 @@
-package com.heima.model.admin.beans;
+package com.heima.model.user.beans;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -69,10 +69,10 @@ public class ApUserRealName implements Serializable {
 
     /**
      * 状态
-            0 创建中
-            1 待审核
-            2 审核失败
-            9 审核通过
+     0 创建中
+     1 待审核
+     2 审核失败
+     9 审核通过
      */
     @TableField("status")
     private Short status;
