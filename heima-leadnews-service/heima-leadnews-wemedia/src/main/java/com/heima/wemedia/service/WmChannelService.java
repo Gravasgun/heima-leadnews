@@ -45,5 +45,5 @@ public interface WmChannelService extends IService<WmChannel> {
      * @param id
      * @return
      */
-    ResponseResult del(Integer id);
+    ResponseResult deleteChannel(Integer id);
 }

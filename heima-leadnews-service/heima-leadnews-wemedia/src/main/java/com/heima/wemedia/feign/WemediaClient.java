@@ -63,8 +63,8 @@ public class WemediaClient implements IWemediaClient {
      */
     @Override
     @GetMapping("/api/v1/channel/del/{id}")
-    public ResponseResult del(@PathVariable("id") Integer id) {
-        return channelService.del(id);
+    public ResponseResult deleteChannel(@PathVariable("id") Integer id) {
+        return channelService.deleteChannel(id);
     }
 
     /**
@@ -101,5 +101,17 @@ public class WemediaClient implements IWemediaClient {
     @PostMapping("/api/v1/sensitive/update")
     public ResponseResult updateSensitive(@RequestBody WmSensitive sensitive) {
         return sensitiveService.updateSensitive(sensitive);
+    }
+
+    /**
+     * 删除敏感词
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    @DeleteMapping("api/v1/sensitive/del/{id}")
+    public ResponseResult deleteSensitive(@PathVariable("id") Integer id) {
+        return sensitiveService.deleteSensitive(id);
     }
 }

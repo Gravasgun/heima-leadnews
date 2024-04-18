@@ -30,7 +30,7 @@ public class AdChannelController {
 
     @GetMapping("/del/{id}")
     public ResponseResult deleteChannel(@PathVariable("id") Integer id) {
-        return wemediaClient.del(id);
+        return wemediaClient.deleteChannel(id);
     }
 }
 

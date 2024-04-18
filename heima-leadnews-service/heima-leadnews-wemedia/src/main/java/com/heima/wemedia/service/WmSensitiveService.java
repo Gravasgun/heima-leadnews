@@ -8,6 +8,7 @@ import com.heima.model.wemedia.pojos.WmSensitive;
 public interface WmSensitiveService extends IService<WmSensitive> {
     /**
      * 敏感词分页查询
+     *
      * @param dto
      * @return
      */
@@ -15,6 +16,7 @@ public interface WmSensitiveService extends IService<WmSensitive> {
 
     /**
      * 新增敏感词
+     *
      * @param sensitive
      * @return
      */
@@ -22,8 +24,16 @@ public interface WmSensitiveService extends IService<WmSensitive> {
 
     /**
      * 修改敏感词
+     *
      * @param sensitive
      * @return
      */
     ResponseResult updateSensitive(WmSensitive sensitive);
+
+    /**
+     * 删除敏感词
+     * @param id
+     * @return
+     */
+    ResponseResult deleteSensitive(Integer id);
 }

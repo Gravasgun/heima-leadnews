@@ -32,6 +32,9 @@ public class WmChannelServiceImpl extends ServiceImpl<WmChannelMapper, WmChannel
     @Autowired
     private WmChannelMapper channelMapper;
 
+    @Autowired
+    private WmNewsMapper newsMapper;
+
     /**
      * 删除频道
      *
@@ -39,7 +42,7 @@ public class WmChannelServiceImpl extends ServiceImpl<WmChannelMapper, WmChannel
      * @return
      */
     @Override
-    public ResponseResult del(Integer id) {
+    public ResponseResult deleteChannel(Integer id) {
         if (id == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
         }
@@ -52,8 +55,6 @@ public class WmChannelServiceImpl extends ServiceImpl<WmChannelMapper, WmChannel
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
 
-    @Autowired
-    private WmNewsMapper newsMapper;
 
     /**
      * 查询所有非禁用的频道

@@ -5,10 +5,7 @@ import com.heima.model.admin.dtos.SensitiveDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.wemedia.pojos.WmSensitive;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/sensitive")
@@ -29,5 +26,10 @@ public class AdSensitiveController {
     @PostMapping("/api/v1/sensitive/update")
     public ResponseResult updateSensitive(@RequestBody WmSensitive sensitive) {
         return wemediaClient.updateSensitive(sensitive);
+    }
+
+    @DeleteMapping("api/v1/sensitive/del/{id}")
+    public ResponseResult deleteSensitive(@PathVariable("id") Integer id) {
+        return wemediaClient.deleteSensitive(id);
     }
 }

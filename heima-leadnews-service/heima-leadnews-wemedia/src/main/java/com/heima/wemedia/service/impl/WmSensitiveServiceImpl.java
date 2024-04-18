@@ -101,4 +101,20 @@ public class WmSensitiveServiceImpl extends ServiceImpl<WmSensitiveMapper, WmSen
         updateById(sensitive);
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
+
+    /**
+     * 删除敏感词
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public ResponseResult deleteSensitive(Integer id) {
+        //参数校验
+        if (id == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        sensitiveMapper.deleteById(id);
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
 }
