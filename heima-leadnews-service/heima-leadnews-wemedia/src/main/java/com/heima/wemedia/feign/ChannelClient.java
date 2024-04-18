@@ -2,6 +2,7 @@ package com.heima.wemedia.feign;
 
 import com.heima.apis.wemedia.IChannelClient;
 import com.heima.model.admin.beans.AdChannel;
+import com.heima.model.admin.dtos.ChannelDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.wemedia.service.WmChannelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,17 @@ public class ChannelClient implements IChannelClient {
     @PostMapping("/api/v1/channel/save")
     public ResponseResult saveChannel(@RequestBody AdChannel adChannel) {
         return channelService.saveChannel(adChannel);
+    }
+
+    /**
+     * 分页查询频道列表
+     *
+     * @param dto
+     * @return
+     */
+    @Override
+    @PostMapping("/api/v1/channel/list")
+    public ResponseResult findListWithPage(@RequestBody ChannelDto dto) {
+        return channelService.findListWithPage(dto);
     }
 }

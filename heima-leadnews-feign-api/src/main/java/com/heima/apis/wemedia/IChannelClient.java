@@ -1,6 +1,7 @@
 package com.heima.apis.wemedia;
 
 import com.heima.model.admin.beans.AdChannel;
+import com.heima.model.admin.dtos.ChannelDto;
 import com.heima.model.common.dtos.ResponseResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,4 +16,12 @@ public interface IChannelClient {
      */
     @PostMapping("/api/v1/channel/save")
     ResponseResult saveChannel(@RequestBody AdChannel adChannel);
+
+    /**
+     * 分页查询频道列表
+     * @param dto
+     * @return
+     */
+    @PostMapping("/api/v1/channel/list")
+    ResponseResult findListWithPage(@RequestBody ChannelDto dto);
 }

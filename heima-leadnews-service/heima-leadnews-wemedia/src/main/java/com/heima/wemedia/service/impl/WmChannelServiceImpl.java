@@ -1,13 +1,19 @@
 package com.heima.wemedia.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.heima.model.admin.beans.AdChannel;
+import com.heima.model.admin.dtos.ChannelDto;
+import com.heima.model.common.dtos.PageResponseResult;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
 import com.heima.model.wemedia.pojos.WmChannel;
 import com.heima.wemedia.mapper.WmChannelMapper;
 import com.heima.wemedia.service.WmChannelService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,5 +77,33 @@ public class WmChannelServiceImpl extends ServiceImpl<WmChannelMapper, WmChannel
         //4. 保存频道
         channelMapper.insert(wmChannel);
         return ResponseResult.okResult(wmChannel);
+    }
+
+    /**
+     * 分页查询频道列表
+     *
+     * @param dto
+     * @return
+     */
+    @Override
+    public ResponseResult findListWithPage(ChannelDto dto) {
+        //1. 校验参数
+        if (dto == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE);
+        }
+        //2. 查询频道列表
+        IPage<WmChannel> page = new Page<>(dto.getPage(), dto.getSize());
+        LambdaQueryWrapper<WmChannel> queryWrapper = new LambdaQueryWrapper<>();
+        //3. 需要按照创建时间倒序查询
+        queryWrapper.orderByDesc(WmChannel::getCreatedTime);
+        //4. 按照频道名称模糊查询
+        if (StringUtils.isNotBlank(dto.getName())) {
+            queryWrapper.like(WmChannel::getName, dto.getName());
+        }
+        page = page(page, queryWrapper);
+        //4. 返回结果
+        ResponseResult responseResult = new PageResponseResult(dto.getPage(), dto.getSize(), (int) page.getTotal());
+        responseResult.setData(page.getRecords());
+        return responseResult;
     }
 }
