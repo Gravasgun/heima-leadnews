@@ -19,4 +19,11 @@ public interface WmSensitiveService extends IService<WmSensitive> {
      * @return
      */
     ResponseResult saveSensitive(WmSensitive sensitive);
+
+    /**
+     * 修改敏感词
+     * @param sensitive
+     * @return
+     */
+    ResponseResult updateSensitive(WmSensitive sensitive);
 }

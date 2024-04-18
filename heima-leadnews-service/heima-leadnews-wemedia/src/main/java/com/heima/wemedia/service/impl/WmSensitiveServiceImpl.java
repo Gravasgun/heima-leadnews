@@ -79,4 +79,26 @@ public class WmSensitiveServiceImpl extends ServiceImpl<WmSensitiveMapper, WmSen
         save(sensitive);
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
+
+    /**
+     * 修改敏感词
+     *
+     * @param sensitive
+     * @return
+     */
+    @Override
+    public ResponseResult updateSensitive(WmSensitive sensitive) {
+        //参数校验
+        if (sensitive == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        List<WmSensitive> sensitiveList = sensitiveMapper.selectList(null);
+        List<String> sensitiveNameList = sensitiveList.stream().map(WmSensitive::getSensitives).collect(Collectors.toList());
+        //已存在的敏感词不能保存
+        if (sensitiveNameList.contains(sensitive.getSensitives())) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_EXIST);
+        }
+        updateById(sensitive);
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
 }

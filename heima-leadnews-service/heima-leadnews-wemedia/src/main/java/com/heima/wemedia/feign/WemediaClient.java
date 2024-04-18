@@ -90,4 +90,16 @@ public class WemediaClient implements IWemediaClient {
     public ResponseResult saveSensitive(@RequestBody WmSensitive sensitive) {
         return sensitiveService.saveSensitive(sensitive);
     }
+
+    /**
+     * 修改敏感词
+     *
+     * @param sensitive
+     * @return
+     */
+    @Override
+    @PostMapping("/api/v1/sensitive/update")
+    public ResponseResult updateSensitive(@RequestBody WmSensitive sensitive) {
+        return sensitiveService.updateSensitive(sensitive);
+    }
 }

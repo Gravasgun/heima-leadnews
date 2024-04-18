@@ -65,4 +65,12 @@ public interface IWemediaClient {
     @PostMapping("/api/v1/sensitive/save")
     ResponseResult saveSensitive(@RequestBody WmSensitive sensitive);
 
+    /**
+     * 修改敏感词
+     * @param sensitive
+     * @return
+     */
+    @PostMapping("/api/v1/sensitive/update")
+    ResponseResult updateSensitive(@RequestBody WmSensitive sensitive);
+
 }

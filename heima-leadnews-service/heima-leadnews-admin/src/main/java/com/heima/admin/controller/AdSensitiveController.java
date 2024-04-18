@@ -25,4 +25,9 @@ public class AdSensitiveController {
     public ResponseResult saveSensitive(@RequestBody WmSensitive sensitive) {
         return wemediaClient.saveSensitive(sensitive);
     }
+
+    @PostMapping("/api/v1/sensitive/update")
+    public ResponseResult updateSensitive(@RequestBody WmSensitive sensitive) {
+        return wemediaClient.updateSensitive(sensitive);
+    }
 }
