@@ -22,7 +22,7 @@ public class ArticleClient implements IArticleClient {
      * @return
      */
     @Override
-    @PostMapping("/api/v1/article/save")
+//    @PostMapping("/api/v1/article/save")
     public ResponseResult saveArticle(@RequestBody ArticleDto dto) {
         return articleService.saveArticle(dto);
     }

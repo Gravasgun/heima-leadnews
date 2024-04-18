@@ -5,7 +5,6 @@ import com.heima.model.article.beans.ApArticle;
 import com.heima.model.article.dtos.ArticleDto;
 import com.heima.model.article.dtos.ArticleHomeDto;
 import com.heima.model.common.dtos.ResponseResult;
-import org.springframework.web.bind.annotation.RequestBody;
 
 public interface ApArticleService extends IService<ApArticle> {
     /**
@@ -14,12 +13,12 @@ public interface ApArticleService extends IService<ApArticle> {
      * @param type 1：加载更多 2：加载最新
      * @return
      */
-    public ResponseResult load(ArticleHomeDto dto,Short type);
+     ResponseResult load(ArticleHomeDto dto,Short type);
 
     /**
      * 保存app端相关文章
      * @param dto
      * @return
      */
-    public ResponseResult saveArticle(ArticleDto dto);
+     ResponseResult saveArticle(ArticleDto dto);
 }
