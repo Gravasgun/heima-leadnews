@@ -1,17 +1,22 @@
 package com.heima.wemedia.feign;
 
-import com.heima.apis.wemedia.IChannelClient;
+import com.heima.apis.wemedia.IWemediaClient;
 import com.heima.model.admin.beans.AdChannel;
 import com.heima.model.admin.dtos.ChannelDto;
+import com.heima.model.admin.dtos.SensitiveDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.wemedia.service.WmChannelService;
+import com.heima.wemedia.service.WmSensitiveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class ChannelClient implements IChannelClient {
+public class WemediaClient implements IWemediaClient {
     @Autowired
     private WmChannelService channelService;
+
+    @Autowired
+    private WmSensitiveService sensitiveService;
 
     /**
      * 新增频道
@@ -59,5 +64,17 @@ public class ChannelClient implements IChannelClient {
     @GetMapping("/api/v1/channel/del/{id}")
     public ResponseResult del(@PathVariable("id") Integer id) {
         return channelService.del(id);
+    }
+
+    /**
+     * 敏感词分页查询
+     *
+     * @param dto
+     * @return
+     */
+    @Override
+    @PostMapping("/api/v1/sensitive/list")
+    public ResponseResult findSensitiveListPage(@RequestBody SensitiveDto dto) {
+        return sensitiveService.list(dto);
     }
 }
