@@ -3,10 +3,12 @@ package com.heima.wemedia.feign;
 import com.heima.apis.wemedia.IWemediaClient;
 import com.heima.model.admin.beans.AdChannel;
 import com.heima.model.admin.dtos.ChannelDto;
+import com.heima.model.admin.dtos.NewsAuthDto;
 import com.heima.model.admin.dtos.SensitiveDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.wemedia.pojos.WmSensitive;
 import com.heima.wemedia.service.WmChannelService;
+import com.heima.wemedia.service.WmNewsService;
 import com.heima.wemedia.service.WmSensitiveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,9 @@ public class WemediaClient implements IWemediaClient {
 
     @Autowired
     private WmSensitiveService sensitiveService;
+
+    @Autowired
+    private WmNewsService newsService;
 
     /**
      * 新增频道
@@ -113,5 +118,17 @@ public class WemediaClient implements IWemediaClient {
     @DeleteMapping("api/v1/sensitive/del/{id}")
     public ResponseResult deleteSensitive(@PathVariable("id") Integer id) {
         return sensitiveService.deleteSensitive(id);
+    }
+
+    /**
+     * 管理端查询文章列表
+     *
+     * @param dto
+     * @return
+     */
+    @Override
+    @PostMapping("/api/v1/news/list_vo")
+    public ResponseResult listVo(@RequestBody NewsAuthDto dto) {
+        return newsService.listVo(dto);
     }
 }

@@ -2,6 +2,7 @@ package com.heima.apis.wemedia;
 
 import com.heima.model.admin.beans.AdChannel;
 import com.heima.model.admin.dtos.ChannelDto;
+import com.heima.model.admin.dtos.NewsAuthDto;
 import com.heima.model.admin.dtos.SensitiveDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.wemedia.pojos.WmSensitive;
@@ -74,10 +75,18 @@ public interface IWemediaClient {
 
     /**
      * 删除敏感词
+     *
      * @param id
      * @return
      */
     @DeleteMapping("/api/v1/sensitive/del/{id}")
     ResponseResult deleteSensitive(@PathVariable("id") Integer id);
 
+    /**
+     * 管理端查询文章列表
+     * @param dto
+     * @return
+     */
+    @PostMapping("/api/v1/news/list_vo")
+    ResponseResult listVo(@RequestBody NewsAuthDto dto);
 }

@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.heima.common.constans.WemediaConstants;
 import com.heima.common.constans.WmNewsMessageConstants;
 import com.heima.common.exception.CustomException;
+import com.heima.model.admin.dtos.NewsAuthDto;
 import com.heima.model.common.dtos.PageResponseResult;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
@@ -296,5 +297,32 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
             }
         }
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
+
+    /**
+     * 管理端查询文章列表
+     *
+     * @param dto
+     * @return
+     */
+    public ResponseResult listVo(NewsAuthDto dto) {
+        if (dto == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        // 2 分页查询
+        IPage pageCheck = new Page(dto.getPage(), dto.getSize());
+        // 3 按照不同需求查询
+        LambdaQueryWrapper<WmNews> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        //3.1 状态
+        if (dto.getStatus() != null) {
+            lambdaQueryWrapper.eq(WmNews::getStatus, dto.getStatus());
+        }
+        //3.2 排序
+        lambdaQueryWrapper.orderByDesc(WmNews::getCreatedTime);
+        pageCheck = page(pageCheck, lambdaQueryWrapper);
+        //4. 返回结果
+        ResponseResult responseResult = new PageResponseResult(dto.getPage(), dto.getSize(), (int) pageCheck.getTotal());
+        responseResult.setData(pageCheck.getRecords());
+        return responseResult;
     }
 }
