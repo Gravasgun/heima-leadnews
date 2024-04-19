@@ -346,4 +346,29 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
         responseResult.setData(list);
         return responseResult;
     }
+
+    /**
+     * 查询文章详情
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public ResponseResult adminFindOneNews(Integer id) {
+        //参数校验
+        if (id == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        //查询文章
+        WmNews news = newsMapper.selectById(id);
+        //查询用户
+        WmUser user = userService.getById(news.getUserId());
+        String name = user.getName();
+        NewsDto newsDto = new NewsDto();
+        BeanUtils.copyProperties(news, newsDto);
+        newsDto.setAuthorName(name);
+        ResponseResult responseResult = new ResponseResult<>();
+        responseResult.setData(newsDto);
+        return responseResult;
+    }
 }

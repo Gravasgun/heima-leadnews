@@ -7,6 +7,7 @@ import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.wemedia.dtos.WmNewsDto;
 import com.heima.model.wemedia.dtos.WmNewsPageReqDto;
 import com.heima.model.wemedia.pojos.WmNews;
+import io.swagger.models.auth.In;
 
 public interface WmNewsService extends IService<WmNews> {
 
@@ -39,5 +40,12 @@ public interface WmNewsService extends IService<WmNews> {
      * @param dto
      * @return
      */
-    public ResponseResult listVo(NewsAuthDto dto);
+     ResponseResult listVo(NewsAuthDto dto);
+
+    /**
+     * 查询文章详情
+     * @param id
+     * @return
+     */
+    ResponseResult adminFindOneNews(Integer id);
 }

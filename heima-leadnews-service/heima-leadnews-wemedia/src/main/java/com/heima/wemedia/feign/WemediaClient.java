@@ -131,4 +131,16 @@ public class WemediaClient implements IWemediaClient {
     public ResponseResult listVo(@RequestBody NewsAuthDto dto) {
         return newsService.listVo(dto);
     }
+
+    /**
+     * 查询文章详情
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    @GetMapping("/api/v1/news/one_vo/{id}")
+    public ResponseResult adminFindOneNews(@PathVariable Integer id) {
+        return newsService.adminFindOneNews(id);
+    }
 }

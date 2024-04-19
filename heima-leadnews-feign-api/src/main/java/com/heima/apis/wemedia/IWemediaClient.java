@@ -84,9 +84,19 @@ public interface IWemediaClient {
 
     /**
      * 管理端查询文章列表
+     *
      * @param dto
      * @return
      */
     @PostMapping("/api/v1/news/list_vo")
     ResponseResult listVo(@RequestBody NewsAuthDto dto);
+
+    /**
+     * 查询文章详情
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/api/v1/news/one_vo/{id}")
+    ResponseResult adminFindOneNews(@PathVariable Integer id);
 }
