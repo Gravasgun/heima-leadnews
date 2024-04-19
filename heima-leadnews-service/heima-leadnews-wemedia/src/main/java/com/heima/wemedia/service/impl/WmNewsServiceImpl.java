@@ -10,7 +10,9 @@ import com.google.gson.JsonObject;
 import com.heima.common.constans.WemediaConstants;
 import com.heima.common.constans.WmNewsMessageConstants;
 import com.heima.common.exception.CustomException;
+import com.heima.model.admin.dtos.AdUserDto;
 import com.heima.model.admin.dtos.NewsAuthDto;
+import com.heima.model.admin.dtos.NewsDto;
 import com.heima.model.common.dtos.PageResponseResult;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
@@ -27,6 +29,7 @@ import com.heima.wemedia.mapper.WmNewsMaterialMapper;
 import com.heima.wemedia.service.WmNewsAutoScanService;
 import com.heima.wemedia.service.WmNewsService;
 import com.heima.wemedia.service.WmNewsTaskService;
+import com.heima.wemedia.service.WmUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -58,6 +61,9 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
 
     @Autowired
     private KafkaTemplate kafkaTemplate;
+
+    @Autowired
+    private WmUserService userService;
 
     /**
      * 查询文章
@@ -310,19 +316,34 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
         }
         // 2 分页查询
-        IPage pageCheck = new Page(dto.getPage(), dto.getSize());
+        IPage<WmNews> pageCheck = new Page(dto.getPage(), dto.getSize());
         // 3 按照不同需求查询
         LambdaQueryWrapper<WmNews> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         //3.1 状态
         if (dto.getStatus() != null) {
             lambdaQueryWrapper.eq(WmNews::getStatus, dto.getStatus());
         }
+        //模糊查询
+        if (StringUtils.isNotBlank(dto.getTitle())) {
+            lambdaQueryWrapper.like(WmNews::getTitle, dto.getTitle());
+        }
         //3.2 排序
         lambdaQueryWrapper.orderByDesc(WmNews::getCreatedTime);
         pageCheck = page(pageCheck, lambdaQueryWrapper);
         //4. 返回结果
         ResponseResult responseResult = new PageResponseResult(dto.getPage(), dto.getSize(), (int) pageCheck.getTotal());
-        responseResult.setData(pageCheck.getRecords());
+        List<WmNews> wmNewsList = pageCheck.getRecords();
+        List<NewsDto> list = new ArrayList<>();
+        for (WmNews wmNews : wmNewsList) {
+            WmUser user = userService.getById(wmNews.getUserId());
+            String name = user.getName();
+            NewsDto newsDto = new NewsDto();
+            BeanUtils.copyProperties(wmNews, newsDto);
+            newsDto.setAuthorName(name);
+            newsDto.setUserId(null);
+            list.add(newsDto);
+        }
+        responseResult.setData(list);
         return responseResult;
     }
 }
