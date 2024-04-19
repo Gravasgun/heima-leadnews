@@ -267,7 +267,6 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
         if (StringUtils.isBlank(news.getContent()) && StringUtils.isBlank(news.getImages())) {
             throw new CustomException(AppHttpCodeEnum.DATA_NOT_EXIST);
         }
-
         //1.从自媒体文章的content获取文本和图片
         if (StringUtils.isNotBlank(news.getContent())) {
             List<Map> maps = JSONArray.parseArray(news.getContent(), Map.class);

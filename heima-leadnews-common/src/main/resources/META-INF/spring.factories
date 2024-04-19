@@ -6,4 +6,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.heima.common.aliyun.TextScanUtil,\
   com.heima.common.tess4j.Tess4jClient,\
   com.heima.common.redis.CacheService,\
-  com.heima.common.redis.RedissonConfig
+  com.heima.common.redis.RedissonConfig,\
+  com.heima.common.jackson.InitJacksonConfig
