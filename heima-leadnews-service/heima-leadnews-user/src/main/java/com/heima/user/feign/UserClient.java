@@ -37,4 +37,15 @@ public class UserClient implements IUserClient {
     public ResponseResult authFail(@RequestBody AuthDto dto) {
         return userRealNameService.authFail(dto);
     }
+
+    /**
+     * 通过审核
+     * @param dto
+     * @return
+     */
+    @Override
+    @PostMapping("/api/v1/auth/authPass")
+    public ResponseResult authPass(@RequestBody AuthDto dto) {
+        return userRealNameService.authPass(dto);
+    }
 }

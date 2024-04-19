@@ -23,4 +23,12 @@ public interface IUserClient {
      */
     @PostMapping("/api/v1/auth/authFail")
     ResponseResult authFail(@RequestBody AuthDto dto);
+
+    /**
+     * 审核通过
+     * @param dto
+     * @return
+     */
+    @PostMapping("/api/v1/auth/authPass")
+    ResponseResult authPass(@RequestBody AuthDto dto);
 }

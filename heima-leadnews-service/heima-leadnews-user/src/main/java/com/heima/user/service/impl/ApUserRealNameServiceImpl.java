@@ -60,17 +60,36 @@ public class ApUserRealNameServiceImpl extends ServiceImpl<ApUserRealNameMapper,
     @Override
     public ResponseResult authFail(AuthDto dto) {
         //参数校验
-        if(dto==null || dto.getId()==null){
+        if (dto == null || dto.getId() == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
         }
         ApUserRealName apUserRealname = new ApUserRealName();
         BeanUtils.copyProperties(dto, apUserRealname);
         apUserRealname.setStatus((short) 2);
-        if(StringUtils.isBlank(dto.getMsg())){
+        if (StringUtils.isBlank(dto.getMsg())) {
             apUserRealname.setReason("审核失败");
-        }else{
+        } else {
             apUserRealname.setReason(dto.getMsg());
         }
+        apUserRealname.setUpdatedTime(new Date());
+        updateById(apUserRealname);
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
+
+    /**
+     * 通过审核
+     *
+     * @param dto
+     * @return
+     */
+    @Override
+    public ResponseResult authPass(AuthDto dto) {
+        if (dto == null || dto.getId() == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        ApUserRealName apUserRealname = new ApUserRealName();
+        BeanUtils.copyProperties(dto, apUserRealname);
+        apUserRealname.setStatus((short) 9);
         apUserRealname.setUpdatedTime(new Date());
         updateById(apUserRealname);
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);

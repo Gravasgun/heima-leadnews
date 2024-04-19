@@ -33,4 +33,14 @@ public class AdUserVerifyController {
     public ResponseResult authFail(@RequestBody AuthDto dto) {
         return userClient.authFail(dto);
     }
+
+    /**
+     * 通过审核
+     * @param dto
+     * @return
+     */
+    @PostMapping("/api/v1/auth/authPass")
+    public ResponseResult authPass(@RequestBody AuthDto dto) {
+        return userClient.authPass(dto);
+    }
 }
