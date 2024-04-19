@@ -13,4 +13,11 @@ public interface ApUserRealNameService extends IService<ApUserRealName> {
      * @return
      */
     ResponseResult findUserList(AuthDto dto);
+
+    /**
+     * 审核失败
+     * @param dto
+     * @return
+     */
+    ResponseResult authFail(AuthDto dto);
 }

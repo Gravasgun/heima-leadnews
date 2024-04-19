@@ -12,8 +12,12 @@ import com.heima.model.user.beans.ApUserRealName;
 import com.heima.user.mapper.ApUserRealNameMapper;
 import com.heima.user.service.ApUserRealNameService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 @Service
 @Transactional
@@ -45,5 +49,30 @@ public class ApUserRealNameServiceImpl extends ServiceImpl<ApUserRealNameMapper,
         ResponseResult responseResult = new PageResponseResult(dto.getPage(), dto.getSize(), (int) pageCheck.getTotal());
         responseResult.setData(pageCheck.getRecords());
         return responseResult;
+    }
+
+    /**
+     * 审核失败
+     *
+     * @param dto
+     * @return
+     */
+    @Override
+    public ResponseResult authFail(AuthDto dto) {
+        //参数校验
+        if(dto==null || dto.getId()==null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        ApUserRealName apUserRealname = new ApUserRealName();
+        BeanUtils.copyProperties(dto, apUserRealname);
+        apUserRealname.setStatus((short) 2);
+        if(StringUtils.isBlank(dto.getMsg())){
+            apUserRealname.setReason("审核失败");
+        }else{
+            apUserRealname.setReason(dto.getMsg());
+        }
+        apUserRealname.setUpdatedTime(new Date());
+        updateById(apUserRealname);
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
 }

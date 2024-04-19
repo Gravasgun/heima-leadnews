@@ -25,4 +25,12 @@ public class AdUserVerifyController {
     public ResponseResult findUserList(@RequestBody AuthDto dto) {
         return userClient.findUserList(dto);
     }
+
+    /**
+     * 审核失败
+     */
+    @PostMapping("/authFail")
+    public ResponseResult authFail(@RequestBody AuthDto dto) {
+        return userClient.authFail(dto);
+    }
 }

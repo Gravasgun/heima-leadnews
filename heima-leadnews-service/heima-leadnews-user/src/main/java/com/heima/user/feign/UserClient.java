@@ -25,4 +25,16 @@ public class UserClient implements IUserClient {
     public ResponseResult findUserList(@RequestBody AuthDto dto) {
         return userRealNameService.findUserList(dto);
     }
+
+    /**
+     * 审核失败
+     *
+     * @param dto
+     * @return
+     */
+    @Override
+    @PostMapping("/api/v1/auth/authFail")
+    public ResponseResult authFail(@RequestBody AuthDto dto) {
+        return userRealNameService.authFail(dto);
+    }
 }

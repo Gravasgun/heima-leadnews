@@ -15,4 +15,12 @@ public interface IUserClient {
      */
     @PostMapping("/api/v1/auth/list")
     ResponseResult findUserList(@RequestBody AuthDto dto);
+
+    /**
+     * 审核失败
+     * @param dto
+     * @return
+     */
+    @PostMapping("/api/v1/auth/authFail")
+    ResponseResult authFail(@RequestBody AuthDto dto);
 }
