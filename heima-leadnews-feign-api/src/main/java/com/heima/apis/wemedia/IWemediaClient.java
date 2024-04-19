@@ -1,9 +1,9 @@
 package com.heima.apis.wemedia;
 
 import com.heima.model.admin.beans.AdChannel;
-import com.heima.model.admin.dtos.ChannelDto;
-import com.heima.model.admin.dtos.NewsAuthDto;
-import com.heima.model.admin.dtos.SensitiveDto;
+import com.heima.model.admin.dtos.AdChannelDto;
+import com.heima.model.admin.dtos.AdNewsAuthDto;
+import com.heima.model.admin.dtos.AdSensitiveDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.wemedia.pojos.WmSensitive;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -26,7 +26,7 @@ public interface IWemediaClient {
      * @return
      */
     @PostMapping("/api/v1/channel/list")
-    ResponseResult findListWithPage(@RequestBody ChannelDto dto);
+    ResponseResult findListWithPage(@RequestBody AdChannelDto dto);
 
     /**
      * 更新频道信息
@@ -53,7 +53,7 @@ public interface IWemediaClient {
      * @return
      */
     @PostMapping("/api/v1/sensitive/list")
-    ResponseResult findSensitiveListPage(@RequestBody SensitiveDto dto);
+    ResponseResult findSensitiveListPage(@RequestBody AdSensitiveDto dto);
 
     /**
      * 新增敏感词
@@ -89,7 +89,7 @@ public interface IWemediaClient {
      * @return
      */
     @PostMapping("/api/v1/news/list_vo")
-    ResponseResult listVo(@RequestBody NewsAuthDto dto);
+    ResponseResult listVo(@RequestBody AdNewsAuthDto dto);
 
     /**
      * 查询文章详情
@@ -99,4 +99,12 @@ public interface IWemediaClient {
      */
     @GetMapping("/api/v1/news/one_vo/{id}")
     ResponseResult adminFindOneNews(@PathVariable Integer id);
+
+    /**
+     * 文章审核失败
+     * @param authDto
+     * @return
+     */
+    @PostMapping("/api/v1/news/auth_fail")
+    ResponseResult adminNewsAuthFail(@RequestBody AdNewsAuthDto authDto);
 }

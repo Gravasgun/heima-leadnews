@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.heima.model.admin.dtos.SensitiveDto;
+import com.heima.model.admin.dtos.AdSensitiveDto;
 import com.heima.model.common.dtos.PageResponseResult;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
@@ -45,7 +45,7 @@ public class WmSensitiveServiceImpl extends ServiceImpl<WmSensitiveMapper, WmSen
      * @return
      */
     @Override
-    public ResponseResult list(SensitiveDto dto) {
+    public ResponseResult list(AdSensitiveDto dto) {
         //参数校验
         if (dto == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);

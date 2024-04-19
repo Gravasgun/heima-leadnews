@@ -2,9 +2,9 @@ package com.heima.wemedia.feign;
 
 import com.heima.apis.wemedia.IWemediaClient;
 import com.heima.model.admin.beans.AdChannel;
-import com.heima.model.admin.dtos.ChannelDto;
-import com.heima.model.admin.dtos.NewsAuthDto;
-import com.heima.model.admin.dtos.SensitiveDto;
+import com.heima.model.admin.dtos.AdChannelDto;
+import com.heima.model.admin.dtos.AdNewsAuthDto;
+import com.heima.model.admin.dtos.AdSensitiveDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.wemedia.pojos.WmSensitive;
 import com.heima.wemedia.service.WmChannelService;
@@ -44,7 +44,7 @@ public class WemediaClient implements IWemediaClient {
      */
     @Override
     @PostMapping("/api/v1/channel/list")
-    public ResponseResult findListWithPage(@RequestBody ChannelDto dto) {
+    public ResponseResult findListWithPage(@RequestBody AdChannelDto dto) {
         return channelService.findListWithPage(dto);
     }
 
@@ -80,7 +80,7 @@ public class WemediaClient implements IWemediaClient {
      */
     @Override
     @PostMapping("/api/v1/sensitive/list")
-    public ResponseResult findSensitiveListPage(@RequestBody SensitiveDto dto) {
+    public ResponseResult findSensitiveListPage(@RequestBody AdSensitiveDto dto) {
         return sensitiveService.list(dto);
     }
 
@@ -128,7 +128,7 @@ public class WemediaClient implements IWemediaClient {
      */
     @Override
     @PostMapping("/api/v1/news/list_vo")
-    public ResponseResult listVo(@RequestBody NewsAuthDto dto) {
+    public ResponseResult listVo(@RequestBody AdNewsAuthDto dto) {
         return newsService.listVo(dto);
     }
 
@@ -142,5 +142,17 @@ public class WemediaClient implements IWemediaClient {
     @GetMapping("/api/v1/news/one_vo/{id}")
     public ResponseResult adminFindOneNews(@PathVariable Integer id) {
         return newsService.adminFindOneNews(id);
+    }
+
+    /**
+     * 文章审核失败
+     *
+     * @param authDto
+     * @return
+     */
+    @Override
+    @PostMapping("/api/v1/news/auth_fail")
+    public ResponseResult adminNewsAuthFail(@RequestBody AdNewsAuthDto authDto) {
+        return newsService.adminNewsAuthFail(authDto);
     }
 }

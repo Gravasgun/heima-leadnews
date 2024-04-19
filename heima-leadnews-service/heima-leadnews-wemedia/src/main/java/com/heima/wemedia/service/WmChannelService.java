@@ -2,7 +2,7 @@ package com.heima.wemedia.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.heima.model.admin.beans.AdChannel;
-import com.heima.model.admin.dtos.ChannelDto;
+import com.heima.model.admin.dtos.AdChannelDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.wemedia.pojos.WmChannel;
 
@@ -29,7 +29,7 @@ public interface WmChannelService extends IService<WmChannel> {
      * @param dto
      * @return
      */
-    ResponseResult findListWithPage(ChannelDto dto);
+    ResponseResult findListWithPage(AdChannelDto dto);
 
     /**
      * 更新频道信息

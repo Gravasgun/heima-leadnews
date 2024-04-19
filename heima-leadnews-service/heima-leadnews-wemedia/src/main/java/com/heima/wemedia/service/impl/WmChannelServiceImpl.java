@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.heima.model.admin.beans.AdChannel;
-import com.heima.model.admin.dtos.ChannelDto;
+import com.heima.model.admin.dtos.AdChannelDto;
 import com.heima.model.common.dtos.PageResponseResult;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
@@ -114,7 +114,7 @@ public class WmChannelServiceImpl extends ServiceImpl<WmChannelMapper, WmChannel
      * @return
      */
     @Override
-    public ResponseResult findListWithPage(ChannelDto dto) {
+    public ResponseResult findListWithPage(AdChannelDto dto) {
         //1. 校验参数
         if (dto == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE);

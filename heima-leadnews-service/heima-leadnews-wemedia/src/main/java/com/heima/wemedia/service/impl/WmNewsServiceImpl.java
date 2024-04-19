@@ -6,13 +6,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.google.gson.JsonObject;
 import com.heima.common.constans.WemediaConstants;
 import com.heima.common.constans.WmNewsMessageConstants;
 import com.heima.common.exception.CustomException;
-import com.heima.model.admin.dtos.AdUserDto;
-import com.heima.model.admin.dtos.NewsAuthDto;
-import com.heima.model.admin.dtos.NewsDto;
+import com.heima.model.admin.dtos.AdNewsAuthDto;
+import com.heima.model.admin.dtos.AdNewsDto;
 import com.heima.model.common.dtos.PageResponseResult;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
@@ -311,7 +309,7 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
      * @param dto
      * @return
      */
-    public ResponseResult listVo(NewsAuthDto dto) {
+    public ResponseResult listVo(AdNewsAuthDto dto) {
         if (dto == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
         }
@@ -333,15 +331,15 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
         //4. 返回结果
         ResponseResult responseResult = new PageResponseResult(dto.getPage(), dto.getSize(), (int) pageCheck.getTotal());
         List<WmNews> wmNewsList = pageCheck.getRecords();
-        List<NewsDto> list = new ArrayList<>();
+        List<AdNewsDto> list = new ArrayList<>();
         for (WmNews wmNews : wmNewsList) {
             WmUser user = userService.getById(wmNews.getUserId());
             String name = user.getName();
-            NewsDto newsDto = new NewsDto();
-            BeanUtils.copyProperties(wmNews, newsDto);
-            newsDto.setAuthorName(name);
-            newsDto.setUserId(null);
-            list.add(newsDto);
+            AdNewsDto adNewsDto = new AdNewsDto();
+            BeanUtils.copyProperties(wmNews, adNewsDto);
+            adNewsDto.setAuthorName(name);
+            adNewsDto.setUserId(null);
+            list.add(adNewsDto);
         }
         responseResult.setData(list);
         return responseResult;
@@ -364,11 +362,32 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
         //查询用户
         WmUser user = userService.getById(news.getUserId());
         String name = user.getName();
-        NewsDto newsDto = new NewsDto();
-        BeanUtils.copyProperties(news, newsDto);
-        newsDto.setAuthorName(name);
+        AdNewsDto adNewsDto = new AdNewsDto();
+        BeanUtils.copyProperties(news, adNewsDto);
+        adNewsDto.setAuthorName(name);
         ResponseResult responseResult = new ResponseResult<>();
-        responseResult.setData(newsDto);
+        responseResult.setData(adNewsDto);
         return responseResult;
+    }
+
+    /**
+     * 文章审核失败
+     *
+     * @param authDto
+     * @return
+     */
+    @Override
+    public ResponseResult adminNewsAuthFail(AdNewsAuthDto authDto) {
+        //参数校验
+        if (authDto == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        WmNews news = getById(authDto.getId());
+        if (StringUtils.isNotBlank(authDto.getMsg())) {
+            news.setReason(authDto.getMsg());
+        }
+        news.setStatus(Short.parseShort(authDto.getStatus().toString()));
+        updateById(news);
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
 }

@@ -2,7 +2,7 @@ package com.heima.admin.controller;
 
 import com.heima.apis.wemedia.IWemediaClient;
 import com.heima.model.admin.beans.AdChannel;
-import com.heima.model.admin.dtos.ChannelDto;
+import com.heima.model.admin.dtos.AdChannelDto;
 import com.heima.model.common.dtos.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ public class AdChannelController {
     }
 
     @PostMapping("/list")
-    public ResponseResult findListWithPage(@RequestBody ChannelDto dto) {
+    public ResponseResult findListWithPage(@RequestBody AdChannelDto dto) {
         return wemediaClient.findListWithPage(dto);
     }
 

@@ -1,7 +1,7 @@
 package com.heima.admin.controller;
 
 import com.heima.apis.wemedia.IWemediaClient;
-import com.heima.model.admin.dtos.SensitiveDto;
+import com.heima.model.admin.dtos.AdSensitiveDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.wemedia.pojos.WmSensitive;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ public class AdSensitiveController {
     private IWemediaClient wemediaClient;
 
     @PostMapping("/api/v1/sensitive/list")
-    public ResponseResult findListWithPage(@RequestBody SensitiveDto dto) {
+    public ResponseResult findListWithPage(@RequestBody AdSensitiveDto dto) {
         return wemediaClient.findSensitiveListPage(dto);
     }
 
