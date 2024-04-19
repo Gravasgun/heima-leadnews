@@ -6,11 +6,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.heima.apis.article.IArticleClient;
 import com.heima.common.constans.WemediaConstants;
 import com.heima.common.constans.WmNewsMessageConstants;
 import com.heima.common.exception.CustomException;
 import com.heima.model.admin.dtos.AdNewsAuthDto;
 import com.heima.model.admin.dtos.AdNewsDto;
+import com.heima.model.article.dtos.ArticleDto;
 import com.heima.model.common.dtos.PageResponseResult;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
@@ -24,10 +26,7 @@ import com.heima.utils.thread.WmThreadLocalUtil;
 import com.heima.wemedia.mapper.WmMaterialMapper;
 import com.heima.wemedia.mapper.WmNewsMapper;
 import com.heima.wemedia.mapper.WmNewsMaterialMapper;
-import com.heima.wemedia.service.WmNewsAutoScanService;
-import com.heima.wemedia.service.WmNewsService;
-import com.heima.wemedia.service.WmNewsTaskService;
-import com.heima.wemedia.service.WmUserService;
+import com.heima.wemedia.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -62,6 +61,12 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
 
     @Autowired
     private WmUserService userService;
+
+    @Autowired
+    private IArticleClient articleClient;
+
+    @Autowired
+    private WmChannelService channelService;
 
     /**
      * 查询文章
@@ -387,6 +392,38 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
             news.setReason(authDto.getMsg());
         }
         news.setStatus(Short.parseShort(authDto.getStatus().toString()));
+        updateById(news);
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
+
+    /**
+     * 文章审核通过
+     *
+     * @param authDto
+     * @return
+     */
+    @Override
+    public ResponseResult adminNewsAuthPass(AdNewsAuthDto authDto) {
+        //参数校验
+        if (authDto == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        WmNews news = getById(authDto.getId());
+        //属性赋值
+        ArticleDto articleDto = new ArticleDto();
+        BeanUtils.copyProperties(news, articleDto);
+        articleDto.setAuthorId(Long.parseLong(news.getUserId().toString()));
+        articleDto.setAuthorName(userService.getById(news.getUserId()).getName());
+        articleDto.setChannelName(channelService.getById(news.getChannelId()).getName());
+        articleDto.setLayout(news.getType());
+        //需要创建app端的文章信息
+        ResponseResult responseResult = articleClient.saveArticle(articleDto);
+        //更新自媒体文章
+        //回填文章id
+        news.setArticleId((Long) responseResult.getData());
+        news.setStatus(Short.parseShort(authDto.getStatus().toString()));
+        news.setReason("人工审核成功");
+        //修改文章信息
         updateById(news);
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }

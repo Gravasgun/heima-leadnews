@@ -102,9 +102,19 @@ public interface IWemediaClient {
 
     /**
      * 文章审核失败
+     *
      * @param authDto
      * @return
      */
     @PostMapping("/api/v1/news/auth_fail")
     ResponseResult adminNewsAuthFail(@RequestBody AdNewsAuthDto authDto);
+
+    /**
+     * 文章审核成功
+     *
+     * @param authDto
+     * @return
+     */
+    @PostMapping("/api/v1/news/auth_pass")
+    ResponseResult adminNewsAuthPass(@RequestBody AdNewsAuthDto authDto);
 }

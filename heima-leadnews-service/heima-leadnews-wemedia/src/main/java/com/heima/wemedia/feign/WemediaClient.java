@@ -155,4 +155,16 @@ public class WemediaClient implements IWemediaClient {
     public ResponseResult adminNewsAuthFail(@RequestBody AdNewsAuthDto authDto) {
         return newsService.adminNewsAuthFail(authDto);
     }
+
+    /**
+     * 文章审核成功
+     *
+     * @param authDto
+     * @return
+     */
+    @Override
+    @PostMapping("/api/v1/news/auth_pass")
+    public ResponseResult adminNewsAuthPass(@RequestBody AdNewsAuthDto authDto) {
+        return newsService.adminNewsAuthPass(authDto);
+    }
 }

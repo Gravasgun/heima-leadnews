@@ -34,9 +34,19 @@ public class AdNewsController {
      * @param authDto
      * @return
      */
-
     @PostMapping("/api/v1/news/auth_fail")
     public ResponseResult adminNewsAuthFail(@RequestBody AdNewsAuthDto authDto) {
         return wemediaClient.adminNewsAuthFail(authDto);
+    }
+
+    /**
+     * 文章审核成功
+     *
+     * @param authDto
+     * @return
+     */
+    @PostMapping("/api/v1/news/auth_pass")
+    public ResponseResult adminNewsAuthPass(@RequestBody AdNewsAuthDto authDto) {
+        return wemediaClient.adminNewsAuthPass(authDto);
     }
 }

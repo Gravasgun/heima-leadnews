@@ -56,4 +56,11 @@ public interface WmNewsService extends IService<WmNews> {
      * @return
      */
     ResponseResult adminNewsAuthFail(AdNewsAuthDto authDto);
+
+    /**
+     * 文章审核通过
+     * @param authDto
+     * @return
+     */
+    ResponseResult adminNewsAuthPass(AdNewsAuthDto authDto);
 }
