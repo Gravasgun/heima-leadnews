@@ -72,12 +72,6 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
     @Override
     @Async //表明此方法是一个异步方法
     public void autoScanNews(Integer newsId) {
-        //睡0.5秒 不然id有可能为空
-//        try {
-//            Thread.sleep(500);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
         //1.查询自媒体文章
         WmNews news = wmNewsMapper.selectById(newsId);
         if (news == null) {
@@ -179,7 +173,7 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
                 for (String sensitive : sensitiveWordList) {
                     if (imageScanResult.contains(sensitive)) {
                         result = false;
-                        news.setStatus((short) 2);
+                        news.setStatus((short) 3);
                         news.setReason("当前文章的图片存在敏感词");
                         wmNewsMapper.updateById(news);
                         return result;
@@ -191,7 +185,7 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
                 //图片文字审核失败
                 if (map != null && map.get("suggestion").equals("block")) {
                     result = false;
-                    news.setStatus((short) 2);
+                    news.setStatus((short) 3);
                     news.setReason("当前文章的图片中的文本存在违规内容");
                     wmNewsMapper.updateById(news);
                     break;
@@ -200,7 +194,7 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
                 Map imageScanMap = localImageScanUtil.localImageScan(imagePath);
                 if (imageScanMap.get("suggestion").equals("block")) {
                     result = false;
-                    news.setStatus((short) 2);
+                    news.setStatus((short) 3);
                     news.setReason("当前文章的图片中存在违规内容");
                     wmNewsMapper.updateById(news);
                     break;
@@ -231,7 +225,7 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
         for (String sensitive : sensitiveWordList) {
             if (content.contains(sensitive)) {
                 result = false;
-                news.setStatus((short) 2);
+                news.setStatus((short) 3);
                 news.setReason("当前文章的文本存在敏感词");
                 wmNewsMapper.updateById(news);
                 return result;
@@ -243,7 +237,7 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
             //审核失败
             if (map != null && map.get("suggestion").equals("block")) {
                 result = false;
-                news.setStatus((short) 2);
+                news.setStatus((short) 3);
                 news.setReason("当前文章的文本存在违规内容");
                 wmNewsMapper.updateById(news);
             }
