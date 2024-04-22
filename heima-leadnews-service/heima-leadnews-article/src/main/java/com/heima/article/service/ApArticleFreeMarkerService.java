@@ -5,7 +5,7 @@ import freemarker.template.TemplateException;
 
 import java.io.IOException;
 
-public interface ArticleFreeMarkerService {
+public interface ApArticleFreeMarkerService {
     /**
      * 生成静态文件 上传到minio中
      * @param apArticle

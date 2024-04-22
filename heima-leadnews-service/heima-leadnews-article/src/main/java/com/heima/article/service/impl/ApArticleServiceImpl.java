@@ -7,7 +7,7 @@ import com.heima.article.mapper.ApArticleConfigMapper;
 import com.heima.article.mapper.ApArticleContentMapper;
 import com.heima.article.mapper.ApArticleMapper;
 import com.heima.article.service.ApArticleService;
-import com.heima.article.service.ArticleFreeMarkerService;
+import com.heima.article.service.ApArticleFreeMarkerService;
 import com.heima.model.article.beans.ApArticle;
 import com.heima.model.article.beans.ApArticleConfig;
 import com.heima.model.article.beans.ApArticleContent;
@@ -44,7 +44,7 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
     private ApArticleContentMapper apArticleContentMapper;
 
     @Autowired
-    private ArticleFreeMarkerService articleFreeMarkerService;
+    private ApArticleFreeMarkerService apArticleFreeMarkerService;
 
 
     /**
@@ -133,7 +133,7 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
         }
         //异步调用 生成静态文件并上传到minio中
         try {
-            articleFreeMarkerService.buildArticleToMinIO(apArticle, apArticleContent.getContent());
+            apArticleFreeMarkerService.buildArticleToMinIO(apArticle, apArticleContent.getContent());
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (TemplateException e) {
