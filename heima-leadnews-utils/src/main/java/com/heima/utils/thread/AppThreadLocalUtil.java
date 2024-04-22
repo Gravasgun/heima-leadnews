@@ -1,7 +1,6 @@
 package com.heima.utils.thread;
 
 import com.heima.model.user.beans.ApUser;
-import com.heima.model.wemedia.pojos.WmUser;
 
 public class AppThreadLocalUtil {
     private static final ThreadLocal<ApUser> APP_USER_THREAD_LOCAL = new ThreadLocal<>();

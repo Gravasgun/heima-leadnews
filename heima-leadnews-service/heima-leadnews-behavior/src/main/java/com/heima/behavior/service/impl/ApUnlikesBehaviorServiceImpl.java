@@ -20,6 +20,11 @@ public class ApUnlikesBehaviorServiceImpl implements ApUnlikesBehaviorService {
     @Autowired
     private CacheService cacheService;
 
+    /**
+     * 不喜欢
+     * @param dto
+     * @return
+     */
     @Override
     public ResponseResult unLike(UnLikesBehaviorDto dto) {
         //参数校验
