@@ -2,6 +2,7 @@ package com.heima.apis.article;
 
 import com.heima.apis.article.fallback.IArticleClientFallback;
 import com.heima.model.article.dtos.ArticleDto;
+import com.heima.model.article.dtos.ArticleInfoDto;
 import com.heima.model.article.dtos.CollectionBehaviorDto;
 import com.heima.model.common.dtos.ResponseResult;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -21,9 +22,18 @@ public interface IArticleClient {
 
     /**
      * 收藏文章
+     *
      * @param dto
      * @return
      */
     @PostMapping("/api/v1/collection_behavior")
     ResponseResult collectionArticle(@RequestBody CollectionBehaviorDto dto);
+
+    /**
+     * 加载文章行为-数据回显
+     * @param dto
+     * @return
+     */
+    @PostMapping("/api/v1/article/load_article_behavior/")
+    ResponseResult loadArticleBehavior(@RequestBody ArticleInfoDto dto);
 }

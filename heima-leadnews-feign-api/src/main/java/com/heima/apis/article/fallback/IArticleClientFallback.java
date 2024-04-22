@@ -2,6 +2,7 @@ package com.heima.apis.article.fallback;
 
 import com.heima.apis.article.IArticleClient;
 import com.heima.model.article.dtos.ArticleDto;
+import com.heima.model.article.dtos.ArticleInfoDto;
 import com.heima.model.article.dtos.CollectionBehaviorDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
@@ -17,16 +18,28 @@ public class IArticleClientFallback implements IArticleClient {
      */
     @Override
     public ResponseResult saveArticle(ArticleDto dto) {
-        return ResponseResult.errorResult(AppHttpCodeEnum.SERVER_ERROR,"保存article接口超时");
+        return ResponseResult.errorResult(AppHttpCodeEnum.SERVER_ERROR, "保存article接口超时");
     }
 
     /**
      * 收藏文章
+     *
      * @param dto
      * @return
      */
     @Override
     public ResponseResult collectionArticle(CollectionBehaviorDto dto) {
-        return ResponseResult.errorResult(AppHttpCodeEnum.SERVER_ERROR,"保存article接口超时");
+        return ResponseResult.errorResult(AppHttpCodeEnum.SERVER_ERROR, "收藏article接口超时");
+    }
+
+    /**
+     * 加载文章行为-数据回显
+     *
+     * @param dto
+     * @return
+     */
+    @Override
+    public ResponseResult loadArticleBehavior(ArticleInfoDto dto) {
+        return ResponseResult.errorResult(AppHttpCodeEnum.SERVER_ERROR, "文章数据回显接口超时");
     }
 }

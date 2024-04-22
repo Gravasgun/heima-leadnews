@@ -8,13 +8,18 @@ import com.heima.article.mapper.ApArticleContentMapper;
 import com.heima.article.mapper.ApArticleMapper;
 import com.heima.article.service.ApArticleService;
 import com.heima.article.service.ApArticleFreeMarkerService;
+import com.heima.common.constans.BehaviorConstants;
+import com.heima.common.redis.CacheService;
 import com.heima.model.article.beans.ApArticle;
 import com.heima.model.article.beans.ApArticleConfig;
 import com.heima.model.article.beans.ApArticleContent;
 import com.heima.model.article.dtos.ArticleDto;
 import com.heima.model.article.dtos.ArticleHomeDto;
+import com.heima.model.article.dtos.ArticleInfoDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
+import com.heima.model.user.beans.ApUser;
+import com.heima.utils.thread.AppThreadLocalUtil;
 import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.heima.common.constans.ArticleConstants.*;
 
@@ -46,6 +53,8 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
     @Autowired
     private ApArticleFreeMarkerService apArticleFreeMarkerService;
 
+    @Autowired
+    private CacheService cacheService;
 
     /**
      * 查询文章列表
@@ -141,5 +150,52 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
         }
         //3.结果返回  文章的id
         return ResponseResult.okResult(apArticle.getId());
+    }
+
+    /**
+     * 加载文章详情 数据回显
+     *
+     * @param dto
+     * @return
+     */
+    @Override
+    public ResponseResult loadArticleBehavior(ArticleInfoDto dto) {
+        //参数校验
+        if (dto == null || dto.getArticleId() == null || dto.getAuthorId() == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        //{ "isFollow": true, "isLike": true,"isUnlike": false,"isCollection": true }
+        boolean isFollow = false, isLike = false, isUnlike = false, isCollection = false;
+        ApUser user = AppThreadLocalUtil.getUser();
+        //判断是否登录
+        if (user == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
+        }
+        //喜欢行为
+        String likeBehaviorJson = (String) cacheService.hGet(BehaviorConstants.LIKE_BEHAVIOR + dto.getArticleId().toString(), user.getId().toString());
+        if (StringUtils.isNotBlank(likeBehaviorJson)) {
+            isLike = true;
+        }
+        //不喜欢的行为
+        String unLikeBehaviorJson = (String) cacheService.hGet(BehaviorConstants.UN_LIKE_BEHAVIOR + dto.getArticleId().toString(), user.getId().toString());
+        if (StringUtils.isNotBlank(unLikeBehaviorJson)) {
+            isUnlike = true;
+        }
+        //是否收藏
+        String collctionJson = (String) cacheService.hGet(BehaviorConstants.COLLECTION_BEHAVIOR + user.getId(), dto.getArticleId().toString());
+        if (StringUtils.isNotBlank(collctionJson)) {
+            isCollection = true;
+        }
+        //是否关注
+        Double score = cacheService.zScore(BehaviorConstants.APUSER_FOLLOW_RELATION + user.getId(), dto.getAuthorId().toString());
+        if (score != null) {
+            isFollow = true;
+        }
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("isfollow", isFollow);
+        resultMap.put("islike", isLike);
+        resultMap.put("isunlike", isUnlike);
+        resultMap.put("iscollection", isCollection);
+        return ResponseResult.okResult(resultMap);
     }
 }
