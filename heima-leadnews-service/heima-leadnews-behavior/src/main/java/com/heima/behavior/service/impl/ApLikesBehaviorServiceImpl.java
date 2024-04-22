@@ -41,17 +41,17 @@ public class ApLikesBehaviorServiceImpl implements ApLikesBehaviorService {
         }
         //3.点赞  保存数据
         if (dto.getOperation() == 0) {
-            Object obj = cacheService.hGet(BehaviorConstants.LIKE_BEHAVIOR + dto.getArticleId().toString(), "userId-" + user.getId().toString());
+            Object obj = cacheService.hGet(BehaviorConstants.LIKE_BEHAVIOR + dto.getArticleId().toString(), user.getId().toString());
             if (obj != null) {
                 return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "已点赞");
             }
             // 保存当前key
             log.info("保存当前key:{} ,{}, {}", dto.getArticleId(), user.getId(), dto);
-            cacheService.hPut(BehaviorConstants.LIKE_BEHAVIOR + dto.getArticleId().toString(), "userId-" + user.getId().toString(), JSON.toJSONString(dto));
+            cacheService.hPut(BehaviorConstants.LIKE_BEHAVIOR + dto.getArticleId().toString(), user.getId().toString(), JSON.toJSONString(dto));
         } else {
             // 删除当前key
             log.info("删除当前key:{}, {}", dto.getArticleId(), user.getId());
-            cacheService.hDelete(BehaviorConstants.LIKE_BEHAVIOR + dto.getArticleId().toString(), "userId-" + user.getId().toString());
+            cacheService.hDelete(BehaviorConstants.LIKE_BEHAVIOR + dto.getArticleId().toString(), user.getId().toString());
         }
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }

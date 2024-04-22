@@ -10,5 +10,5 @@ public interface ApReadBehaviorService {
      * @param dto
      * @return
      */
-    public ResponseResult readBehavior(ReadBehaviorDto dto);
+     ResponseResult readBehavior(ReadBehaviorDto dto);
 }

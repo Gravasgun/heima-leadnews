@@ -36,14 +36,14 @@ public class ApReadBehaviorServiceImpl implements ApReadBehaviorService {
             return ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
         }
         //更新阅读次数
-        String readBehaviorJson = (String) cacheService.hGet(BehaviorConstants.READ_BEHAVIOR + "userId-" + dto.getArticleId().toString(), user.getId().toString());
+        String readBehaviorJson = (String) cacheService.hGet(BehaviorConstants.READ_BEHAVIOR + dto.getArticleId().toString(), user.getId().toString());
         if (StringUtils.isNotBlank(readBehaviorJson)) {
             ReadBehaviorDto readBehaviorDto = JSON.parseObject(readBehaviorJson, ReadBehaviorDto.class);
             dto.setCount((short) (readBehaviorDto.getCount() + dto.getCount()));
         }
         // 保存当前key
         log.info("保存当前key:{} {} {}", dto.getArticleId(), user.getId(), dto);
-        cacheService.hPut(BehaviorConstants.READ_BEHAVIOR + dto.getArticleId().toString(), "userId-" + dto.getArticleId().toString(), JSON.toJSONString(dto));
+        cacheService.hPut(BehaviorConstants.READ_BEHAVIOR + dto.getArticleId().toString(), user.getId().toString(), JSON.toJSONString(dto));
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
 }
