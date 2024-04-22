@@ -11,5 +11,5 @@ public interface ApUserService extends IService<ApUser> {
      * @param loginDto
      * @return
      */
-    public ResponseResult login(LoginDto loginDto);
+     ResponseResult login(LoginDto loginDto);
 }
