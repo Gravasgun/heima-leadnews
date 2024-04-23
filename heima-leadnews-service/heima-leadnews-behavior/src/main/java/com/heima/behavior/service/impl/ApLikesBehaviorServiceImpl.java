@@ -1,9 +1,12 @@
 package com.heima.behavior.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.heima.apis.article.IArticleClient;
 import com.heima.behavior.service.ApLikesBehaviorService;
 import com.heima.common.constans.BehaviorConstants;
 import com.heima.common.redis.CacheService;
+import com.heima.model.article.beans.ApArticle;
 import com.heima.model.behavior.dtos.LikesBehaviorDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
@@ -21,6 +24,9 @@ public class ApLikesBehaviorServiceImpl implements ApLikesBehaviorService {
 
     @Autowired
     private CacheService cacheService;
+
+    @Autowired
+    private IArticleClient articleClient;
 
     /**
      * 点赞功能
@@ -48,10 +54,30 @@ public class ApLikesBehaviorServiceImpl implements ApLikesBehaviorService {
             // 保存当前key
             log.info("保存当前key:{} ,{}, {}", dto.getArticleId(), user.getId(), dto);
             cacheService.hPut(BehaviorConstants.LIKE_BEHAVIOR + dto.getArticleId().toString(), user.getId().toString(), JSON.toJSONString(dto));
+            //查询文章，修改点赞量
+            ResponseResult responseResult = articleClient.findArticleById(dto.getArticleId());
+            if (responseResult != null && responseResult.getCode().equals(200)) {
+                ApArticle article = JSONObject.parseObject(JSONObject.toJSONString(responseResult.getData()), ApArticle.class);
+                if (article.getLikes() == null) {
+                    article.setLikes(1);
+                } else {
+                    article.setLikes(article.getLikes() + 1);
+                }
+                //更新文章数据
+                articleClient.updateArticle(article);
+            }
         } else {
             // 删除当前key
             log.info("删除当前key:{}, {}", dto.getArticleId(), user.getId());
             cacheService.hDelete(BehaviorConstants.LIKE_BEHAVIOR + dto.getArticleId().toString(), user.getId().toString());
+            //查询文章，修改点赞量
+            ResponseResult responseResult = articleClient.findArticleById(dto.getArticleId());
+            if (responseResult != null && responseResult.getCode().equals(200)) {
+                ApArticle article = (ApArticle) responseResult.getData();
+                article.setLikes(article.getLikes() - 1);
+                //更新文章数据
+                articleClient.updateArticle(article);
+            }
         }
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }

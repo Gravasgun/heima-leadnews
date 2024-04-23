@@ -4,15 +4,14 @@ import com.heima.apis.article.IArticleClient;
 import com.heima.article.service.ApArticleService;
 import com.heima.article.service.ApCollectionService;
 import com.heima.article.service.HotArticleService;
+import com.heima.model.article.beans.ApArticle;
 import com.heima.model.article.dtos.ArticleDto;
 import com.heima.model.article.dtos.ArticleInfoDto;
 import com.heima.model.article.dtos.CollectionBehaviorDto;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ArticleClient implements IArticleClient {
@@ -68,5 +67,28 @@ public class ArticleClient implements IArticleClient {
     public ResponseResult calculateHotArticle() {
         hotArticleService.calculateHotArticle();
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
+
+    /**
+     * 根据文章id查询文章
+     *
+     * @param id 文章id
+     * @return
+     */
+    @GetMapping("/api/v1/article/{id}")
+    public ResponseResult findArticleById(@PathVariable("id") Long id) {
+        return articleService.findArticleById(id);
+    }
+
+    /**
+     * 根据文章id更新文章
+     *
+     * @param article
+     * @return
+     */
+    @Override
+    @PostMapping("/api/v1/article/updateById")
+    public ResponseResult updateArticle(@RequestBody ApArticle article) {
+        return articleService.updateArticle(article);
     }
 }

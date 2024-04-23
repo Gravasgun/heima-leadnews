@@ -21,7 +21,7 @@ public interface ApArticleService extends IService<ApArticle> {
      * 查询文章列表(热点数据)
      *
      * @param dto
-     * @param type 1：加载更多 2：加载最新
+     * @param type      1：加载更多 2：加载最新
      * @param firstPage true:是首页 false:非首页
      * @return
      */
@@ -42,4 +42,19 @@ public interface ApArticleService extends IService<ApArticle> {
      * @return
      */
     ResponseResult loadArticleBehavior(ArticleInfoDto dto);
+
+    /**
+     * 根据文章id查询文章
+     *
+     * @param id 文章id
+     * @return
+     */
+    ResponseResult findArticleById(Long id);
+
+    /**
+     * 根据文章id更新文章
+     * @param article
+     * @return
+     */
+    ResponseResult updateArticle(ApArticle article);
 }

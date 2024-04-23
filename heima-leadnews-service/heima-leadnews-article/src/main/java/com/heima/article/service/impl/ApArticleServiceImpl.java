@@ -220,4 +220,34 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
         }
         return load(dto, type);
     }
+
+    /**
+     * 根据文章id查询文章
+     *
+     * @param id 文章id
+     * @return
+     */
+    @Override
+    public ResponseResult findArticleById(Long id) {
+        if (id == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        ApArticle article = getById(id);
+        return ResponseResult.okResult(article);
+    }
+
+    /**
+     * 根据文章id更新文章
+     *
+     * @param article
+     * @return
+     */
+    @Override
+    public ResponseResult updateArticle(ApArticle article) {
+        if (article == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        updateById(article);
+        return ResponseResult.okResult(article);
+    }
 }
