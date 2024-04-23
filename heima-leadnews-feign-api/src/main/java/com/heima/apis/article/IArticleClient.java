@@ -36,4 +36,10 @@ public interface IArticleClient {
      */
     @PostMapping("/api/v1/article/load_article_behavior/")
     ResponseResult loadArticleBehavior(@RequestBody ArticleInfoDto dto);
+
+    /**
+     * 热点文章定时计算
+     */
+    @PostMapping("/api/v1/article/calculateHotArticle")
+    ResponseResult calculateHotArticle();
 }

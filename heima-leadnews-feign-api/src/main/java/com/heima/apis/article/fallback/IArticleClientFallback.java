@@ -42,4 +42,12 @@ public class IArticleClientFallback implements IArticleClient {
     public ResponseResult loadArticleBehavior(ArticleInfoDto dto) {
         return ResponseResult.errorResult(AppHttpCodeEnum.SERVER_ERROR, "文章数据回显接口超时");
     }
+
+    /**
+     * 热点文章定时计算
+     */
+    @Override
+    public ResponseResult calculateHotArticle() {
+        return ResponseResult.errorResult(AppHttpCodeEnum.SERVER_ERROR, "热点文章定时计算接口超时");
+    }
 }

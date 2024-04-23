@@ -37,6 +37,17 @@ public class WemediaClient implements IWemediaClient {
     }
 
     /**
+     * 查询所有频道
+     *
+     * @return
+     */
+    @Override
+    @GetMapping("/api/v1/channel/findList")
+    public ResponseResult findList() {
+        return channelService.findAll();
+    }
+
+    /**
      * 分页查询频道列表
      *
      * @param dto

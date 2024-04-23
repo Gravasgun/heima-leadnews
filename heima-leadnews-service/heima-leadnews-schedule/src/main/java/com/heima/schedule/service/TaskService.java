@@ -32,4 +32,6 @@ public interface TaskService {
      * 未来数据定时刷新
      */
     void refresh();
+
+    void hotArticleTimedCalculate();
 }

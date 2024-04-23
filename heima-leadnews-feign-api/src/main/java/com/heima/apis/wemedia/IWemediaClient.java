@@ -20,6 +20,14 @@ public interface IWemediaClient {
     ResponseResult saveChannel(@RequestBody AdChannel adChannel);
 
     /**
+     * 查询所有频道
+     *
+     * @return
+     */
+    @GetMapping("/api/v1/channel/findList")
+    ResponseResult findList();
+
+    /**
      * 分页查询频道列表
      *
      * @param dto

@@ -2,6 +2,7 @@ package com.heima.schedule.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.heima.apis.article.IArticleClient;
 import com.heima.common.constans.ScheduleConstants;
 import com.heima.common.redis.CacheService;
 import com.heima.model.schedule.beans.TaskInfo;
@@ -41,6 +42,9 @@ public class TaskServiceImpl implements TaskService {
     private CacheService cacheService;
     @Autowired
     private RedissonClient redissonClient;
+
+    @Autowired
+    private IArticleClient articleClient;
 
     /**
      * 添加延迟任务
@@ -292,5 +296,24 @@ public class TaskServiceImpl implements TaskService {
             e.printStackTrace();
         }
         return result;
+    }
+
+    @Override
+    @Scheduled(cron = "0 */1 * * * ?")
+    public void hotArticleTimedCalculate() {
+        RLock lock = redissonClient.getLock("HOT_ARTICLE_CALCULATE");
+        try {
+            boolean flag = lock.tryLock(1, 30, TimeUnit.SECONDS);
+            if (flag) {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                log.info(simpleDateFormat.format(new Date()) + "执行了热点文章定时计算");
+                //远程调用
+                articleClient.calculateHotArticle();
+            }
+        } catch (InterruptedException e) {
+            //出现异常释放锁
+            lock.unlock();
+            throw new RuntimeException(e);
+        }
     }
 }
