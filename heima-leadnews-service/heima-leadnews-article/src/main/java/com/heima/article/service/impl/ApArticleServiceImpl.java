@@ -16,6 +16,7 @@ import com.heima.model.article.beans.ApArticleContent;
 import com.heima.model.article.dtos.ArticleDto;
 import com.heima.model.article.dtos.ArticleHomeDto;
 import com.heima.model.article.dtos.ArticleInfoDto;
+import com.heima.model.article.vos.HotArticleVo;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
 import com.heima.model.user.beans.ApUser;
@@ -93,6 +94,7 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
         //返回结果
         return ResponseResult.okResult(articleList);
     }
+
 
     /**
      * 保存app端相关文章
@@ -197,5 +199,25 @@ public class ApArticleServiceImpl extends ServiceImpl<ApArticleMapper, ApArticle
         resultMap.put("isunlike", isUnlike);
         resultMap.put("iscollection", isCollection);
         return ResponseResult.okResult(resultMap);
+    }
+
+    /**
+     * 查询文章列表(热点数据)
+     *
+     * @param dto
+     * @param type      1：加载更多 2：加载最新
+     * @param firstPage true:是首页 false:非首页
+     * @return
+     */
+    @Override
+    public ResponseResult loadHotArticle(ArticleHomeDto dto, Short type, Boolean firstPage) {
+        if (firstPage) {
+            String jsonStr = cacheService.get(HOT_ARTICLE_FIRST_PAGE + dto.getTag());
+            if (StringUtils.isNotBlank(jsonStr)) {
+                List<HotArticleVo> articleVoList = JSONObject.parseArray(jsonStr, HotArticleVo.class);
+                return ResponseResult.okResult(articleVoList);
+            }
+        }
+        return load(dto, type);
     }
 }
