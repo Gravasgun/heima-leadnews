@@ -73,7 +73,7 @@ public class ApLikesBehaviorServiceImpl implements ApLikesBehaviorService {
             //查询文章，修改点赞量
             ResponseResult responseResult = articleClient.findArticleById(dto.getArticleId());
             if (responseResult != null && responseResult.getCode().equals(200)) {
-                ApArticle article = (ApArticle) responseResult.getData();
+                ApArticle article = JSONObject.parseObject(JSONObject.toJSONString(responseResult.getData()), ApArticle.class);
                 article.setLikes(article.getLikes() - 1);
                 //更新文章数据
                 articleClient.updateArticle(article);
