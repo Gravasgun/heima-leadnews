@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>heima-leadnews-user</artifactId>
-
+    <packaging>jar</packaging>
     <name>heima-leadnews-user</name>
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>

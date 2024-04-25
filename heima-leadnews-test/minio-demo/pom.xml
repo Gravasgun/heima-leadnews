@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>minio-demo</artifactId>
-
+    <packaging>jar</packaging>
     <name>minio-demo</name>
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>

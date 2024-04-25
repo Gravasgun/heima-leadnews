@@ -453,18 +453,18 @@ public class DateUtils {
     }
 
 
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        //String temp = DateUtil.dateToString(getLastDayOfMonth(new Date()),
-        ///   DateUtil.DATE_FORMAT_CHINESE);
-        //String s=DateUtil.dateToString(DateUtil.addDay(DateUtil.addYear(new Date(),1),-1));
-
-
-        long s = DateUtils.getDayByMinusDate("2012-01-01", "2012-12-31");
-        System.err.println(s);
-
-
-    }
+//    /**
+//     * @param args
+//     */
+//    public static void main(String[] args) {
+//        //String temp = DateUtil.dateToString(getLastDayOfMonth(new Date()),
+//        ///   DateUtil.DATE_FORMAT_CHINESE);
+//        //String s=DateUtil.dateToString(DateUtil.addDay(DateUtil.addYear(new Date(),1),-1));
+//
+//
+//        long s = DateUtils.getDayByMinusDate("2012-01-01", "2012-12-31");
+//        System.err.println(s);
+//
+//
+//    }
 }

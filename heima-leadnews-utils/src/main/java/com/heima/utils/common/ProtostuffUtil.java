@@ -1,6 +1,5 @@
 package com.heima.utils.common;
 
-
 import com.heima.model.wemedia.pojos.WmNews;
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
@@ -43,25 +42,25 @@ public class ProtostuffUtil {
         return t;
     }
 
-    /**
-     * jdk序列化与protostuff序列化对比
-     * @param args
-     */
-    public static void main(String[] args) {
-        long start =System.currentTimeMillis();
-        for (int i = 0; i <1000000 ; i++) {
-            WmNews wmNews =new WmNews();
-            JdkSerializeUtil.serialize(wmNews);
-        }
-        System.out.println(" jdk 花费 "+(System.currentTimeMillis()-start));
-
-        start =System.currentTimeMillis();
-        for (int i = 0; i <1000000 ; i++) {
-            WmNews wmNews =new WmNews();
-            ProtostuffUtil.serialize(wmNews);
-        }
-        System.out.println(" protostuff 花费 "+(System.currentTimeMillis()-start));
-    }
+//    /**
+//     * jdk序列化与protostuff序列化对比
+//     * @param args
+//     */
+//    public static void main(String[] args) {
+//        long start =System.currentTimeMillis();
+//        for (int i = 0; i <1000000 ; i++) {
+//            WmNews wmNews =new WmNews();
+//            JdkSerializeUtil.serialize(wmNews);
+//        }
+//        System.out.println(" jdk 花费 "+(System.currentTimeMillis()-start));
+//
+//        start =System.currentTimeMillis();
+//        for (int i = 0; i <1000000 ; i++) {
+//            WmNews wmNews =new WmNews();
+//            ProtostuffUtil.serialize(wmNews);
+//        }
+//        System.out.println(" protostuff 花费 "+(System.currentTimeMillis()-start));
+//    }
 
  
  

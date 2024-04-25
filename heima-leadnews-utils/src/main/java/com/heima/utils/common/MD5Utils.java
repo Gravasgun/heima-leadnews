@@ -43,8 +43,8 @@ public class MD5Utils {
         return encode(encode(numStr) + salt);
     }
 
-    public static void main(String[] args) {
-        System.out.println(encode("test"));//e10adc3949ba59abbe56e057f20f883e
-        System.out.println(encodeWithSalt("123456","123456"));//5f1d7a84db00d2fce00b31a7fc73224f
-    }
+//    public static void main(String[] args) {
+//        System.out.println(encode("test"));//e10adc3949ba59abbe56e057f20f883e
+//        System.out.println(encodeWithSalt("123456","123456"));//5f1d7a84db00d2fce00b31a7fc73224f
+//    }
 }

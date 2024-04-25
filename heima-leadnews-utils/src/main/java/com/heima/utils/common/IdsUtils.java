@@ -77,8 +77,8 @@ public class IdsUtils {
         return hs.toUpperCase();
     }
 
-    public static void main(String[] args) throws Exception{
-        System.out.println("========:"+encryptNumber(2l));
-    }
+//    public static void main(String[] args) throws Exception{
+//        System.out.println("========:"+encryptNumber(2l));
+//    }
 
 }

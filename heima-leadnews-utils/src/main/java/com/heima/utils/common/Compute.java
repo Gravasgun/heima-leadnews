@@ -6,12 +6,12 @@ import java.util.Locale;
 
 public class Compute {
 
-    public static void main(String[] args) {
-        String content = "最近公司由于业务拓展，需要进行小程序相关的开发，本着朝全栈开发者努力，决定学习下Vue，去年csdn送了一本《Vue.js权威指南》";
-        String title = "VueVueVue";
-        double ss = SimilarDegree(content, title);
-        System.out.println(ss);
-    }
+//    public static void main(String[] args) {
+//        String content = "最近公司由于业务拓展，需要进行小程序相关的开发，本着朝全栈开发者努力，决定学习下Vue，去年csdn送了一本《Vue.js权威指南》";
+//        String title = "VueVueVue";
+//        double ss = SimilarDegree(content, title);
+//        System.out.println(ss);
+//    }
     /*
      * 计算相似度
      * */

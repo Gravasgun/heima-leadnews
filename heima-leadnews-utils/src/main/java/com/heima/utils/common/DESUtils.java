@@ -142,19 +142,19 @@ public class DESUtils {
         return byteToHexString(decrypt(hexToByteArr(passcode), key.getBytes()));
     }
 
-    public static void main(String[] args) {
-        String content = "password111111111111111";
-
-        System.out.println("加密前 "+ byteToHexString(content.getBytes()));
-        byte[] encrypted = encrypt(content.getBytes(), key.getBytes());
-        System.out.println("加密后："+ byteToHexString(encrypted));
-
-        byte[] decrypted=decrypt(encrypted, key.getBytes());
-        System.out.println("解密后："+ byteToHexString(decrypted));
-
-
-        System.out.println(encode(content));
-        String s = new String(hexStringToByte(decode("159CF72C0BD2A8183D536215768C2E91556D77642F214E34")));
-        System.out.println(s);
-    }
+//    public static void main(String[] args) {
+//        String content = "password111111111111111";
+//
+//        System.out.println("加密前 "+ byteToHexString(content.getBytes()));
+//        byte[] encrypted = encrypt(content.getBytes(), key.getBytes());
+//        System.out.println("加密后："+ byteToHexString(encrypted));
+//
+//        byte[] decrypted=decrypt(encrypted, key.getBytes());
+//        System.out.println("解密后："+ byteToHexString(decrypted));
+//
+//
+//        System.out.println(encode(content));
+//        String s = new String(hexStringToByte(decode("159CF72C0BD2A8183D536215768C2E91556D77642F214E34")));
+//        System.out.println(s);
+//    }
 }
