@@ -8,6 +8,8 @@ spring:
       enabled: true
   aop:
     proxy-target-class: true
+  profiles:
+    active: prod
 server:
   tomcat:
     uri-encoding: utf-8

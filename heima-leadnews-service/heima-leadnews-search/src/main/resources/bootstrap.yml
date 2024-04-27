@@ -6,19 +6,21 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 192.168.200.130:8848
+        server-addr: 47.109.159.24:8848
       config:
-        server-addr: 192.168.200.130:8848
+        server-addr: 47.109.159.24:8848
         file-extension: yml
+  profiles:
+    active: prod
 elasticsearch:
-  host: 192.168.200.130
+  host: 47.109.159.24
   port: 9200
 redisson:
   password: leadnews
-  address: redis://192.168.200.130:6379
+  address: redis://47.109.159.24:6379
 minio:
   accessKey: minio
   secretKey: minio123
   bucket: leadnews
-  endpoint: http://192.168.200.130:9000
-  readPath: http://192.168.200.130:9000
+  endpoint: http://47.109.159.24:9090
+  readPath: http://47.109.159.24:9090
