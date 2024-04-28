@@ -163,33 +163,33 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
                 //从minio下载图片
                 byte[] bytes = fileStorageService.downLoadFile(imagePath);
                 //图片文字识别
-                System.out.println("图片文字识别开始------------------");
-                ByteArrayInputStream in = new ByteArrayInputStream(bytes);
-                BufferedImage bufferedImage = ImageIO.read(in);
-                String imageScanResult = tess4jClient.doOCR(bufferedImage);
-                //敏感词审核
-                List<WmSensitive> sensitiveList = sensitiveService.findAllSensitives();
-                List<String> sensitiveWordList = sensitiveList.stream().map(WmSensitive::getSensitives).collect(Collectors.toList());
-                for (String sensitive : sensitiveWordList) {
-                    if (imageScanResult.contains(sensitive)) {
-                        result = false;
-                        news.setStatus((short) 3);
-                        news.setReason("当前文章的图片存在敏感词");
-                        wmNewsMapper.updateById(news);
-                        return result;
-                    }
-                }
-                System.out.println("图片文字识别结束------------------");
-                //调用阿里云文字审核api
-                Map map = textScanUtil.greeTextScan(imageScanResult);
-                //图片文字审核失败
-                if (map != null && map.get("suggestion").equals("block")) {
-                    result = false;
-                    news.setStatus((short) 3);
-                    news.setReason("当前文章的图片中的文本存在违规内容");
-                    wmNewsMapper.updateById(news);
-                    break;
-                }
+//                System.out.println("图片文字识别开始------------------");
+//                ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+//                BufferedImage bufferedImage = ImageIO.read(in);
+//                String imageScanResult = tess4jClient.doOCR(bufferedImage);
+//                //敏感词审核
+//                List<WmSensitive> sensitiveList = sensitiveService.findAllSensitives();
+//                List<String> sensitiveWordList = sensitiveList.stream().map(WmSensitive::getSensitives).collect(Collectors.toList());
+//                for (String sensitive : sensitiveWordList) {
+//                    if (imageScanResult.contains(sensitive)) {
+//                        result = false;
+//                        news.setStatus((short) 3);
+//                        news.setReason("当前文章的图片存在敏感词");
+//                        wmNewsMapper.updateById(news);
+//                        return result;
+//                    }
+//                }
+//                System.out.println("图片文字识别结束------------------");
+//                //调用阿里云文字审核api
+//                Map map = textScanUtil.greeTextScan(imageScanResult);
+//                //图片文字审核失败
+//                if (map != null && map.get("suggestion").equals("block")) {
+//                    result = false;
+//                    news.setStatus((short) 3);
+//                    news.setReason("当前文章的图片中的文本存在违规内容");
+//                    wmNewsMapper.updateById(news);
+//                    break;
+//                }
                 //2.图片审核
                 Map imageScanMap = localImageScanUtil.localImageScan(imagePath);
                 if (imageScanMap.get("suggestion").equals("block")) {

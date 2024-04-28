@@ -56,7 +56,7 @@ public class WmNewsTaskServiceImpl implements WmNewsTaskService {
     @Override
     public void consumeTask() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        log.info(simpleDateFormat.format(new Date()) + "消费任务，审核文章");
+        //log.info(simpleDateFormat.format(new Date()) + "消费任务，审核文章");
         ResponseResult responseResult = scheduleClient.pollTask(TaskTypeEnum.NEWS_SCAN_TIME.getTaskType(), TaskTypeEnum.NEWS_SCAN_TIME.getPriority());
         if (responseResult != null && responseResult.getCode().equals(200) && responseResult.getData() != null) {
             Task task = JSONObject.parseObject(JSONObject.toJSONString(responseResult.getData()), Task.class);
