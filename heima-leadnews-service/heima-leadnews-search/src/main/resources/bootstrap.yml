@@ -22,5 +22,5 @@ minio:
   accessKey: minio
   secretKey: minio123
   bucket: leadnews
-  endpoint: http://47.109.159.24:9090
-  readPath: http://47.109.159.24:9090
+  endpoint: http://47.109.159.24:9001
+  readPath: http://47.109.159.24:9001
