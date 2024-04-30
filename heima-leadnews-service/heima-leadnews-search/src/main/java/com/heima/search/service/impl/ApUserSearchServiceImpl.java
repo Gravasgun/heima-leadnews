@@ -82,13 +82,13 @@ public class ApUserSearchServiceImpl implements ApUserSearchService {
     /**
      * 删除历史记录
      *
-     * @param dto
+     * @param id
      * @return
      */
     @Override
-    public ResponseResult delUserSearch(HistorySearchDto dto) {
+    public ResponseResult delUserSearch(String id) {
         //1.检查参数
-        if(dto.getId() == null){
+        if(id == null){
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
         }
         //2.判断是否登录
@@ -97,7 +97,7 @@ public class ApUserSearchServiceImpl implements ApUserSearchService {
             return ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
         }
         //3.删除
-        mongoTemplate.remove(Query.query(Criteria.where("userId").is(user.getId()).and("id").is(dto.getId())),ApUserSearch.class);
+        mongoTemplate.remove(Query.query(Criteria.where("userId").is(user.getId()).and("id").is(id)),ApUserSearch.class);
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
 }

@@ -21,8 +21,8 @@ public interface ApUserSearchService {
 
     /**
      删除搜索历史
-     @param historySearchDto
+     @param id
      @return
      */
-    ResponseResult delUserSearch(HistorySearchDto historySearchDto);
+    ResponseResult delUserSearch(String id);
 }
