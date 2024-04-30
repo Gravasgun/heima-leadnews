@@ -5,11 +5,11 @@ spring:
     name: leadnews-admin
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://47.109.159.24:3306/leadnews-admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://47.108.25.63:3306/leadnews-admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     username: root
     password: Liuhangji0904
   redis:
-    host: 47.109.159.24
+    host: 47.108.25.63
     password: leadnews
     port: 6379
   cloud:
@@ -25,8 +25,8 @@ minio:
   accessKey: minio
   secretKey: minio123
   bucket: leadnews
-  endpoint: http://47.109.159.24:9090
-  readPath: http://47.109.159.24:9090
+  endpoint: http://47.108.25.63:9001
+  readPath: http://47.108.25.63:9001
 redisson:
   password: leadnews
-  address: redis://47.109.159.24:6379
+  address: redis://47.108.25.63:6379
