@@ -102,4 +102,59 @@ public class WmMaterialServiceImpl extends ServiceImpl<WmMaterialMapper, WmMater
         responseResult.setData(page.getRecords());
         return responseResult;
     }
+
+    /**
+     * 根据id删除图片
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public ResponseResult deleteMaterial(Long id) {
+        if (id == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        materialMapper.deleteById(id);
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
+
+    /**
+     * 取消收藏
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public ResponseResult cancelCollectMaterial(Long id) {
+        if (id == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        WmMaterial material = materialMapper.selectById(id);
+        if (material == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST);
+        }
+        material.setIsCollection((short) 0);
+        materialMapper.updateById(material);
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
+
+    /**
+     * 根据id收藏图片
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public ResponseResult collectMaterial(Long id) {
+        if (id == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        WmMaterial material = materialMapper.selectById(id);
+        if (material == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST);
+        }
+        material.setIsCollection((short) 1);
+        materialMapper.updateById(material);
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
 }

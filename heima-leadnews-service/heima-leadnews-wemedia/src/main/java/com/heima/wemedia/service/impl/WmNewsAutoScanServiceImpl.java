@@ -58,8 +58,6 @@ public class WmNewsAutoScanServiceImpl implements WmNewsAutoScanService {
     @Autowired
     private FileStorageService fileStorageService;
 
-    @Autowired
-    private Tess4jClient tess4jClient;
 
     @Autowired
     private WmSensitiveService sensitiveService;
