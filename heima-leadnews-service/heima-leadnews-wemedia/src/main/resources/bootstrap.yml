@@ -15,10 +15,10 @@ spring:
   profiles:
     active: prod
 
-tess4j:
-  data-path: D:\workSpace\tessdata
-  language: chi_sim
+#tess4j:
+  #data-path: D:\workSpace\tessdata
+  #language: chi_sim
 
 redisson:
   password: leadnews
-  address: redis://47.109.159.24:6379
+  address: redis://47.108.25.63:6379
